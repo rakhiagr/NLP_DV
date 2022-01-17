@@ -22,38 +22,50 @@ const BeeSwarm = (props) => {
     useEffect(() => {
 
         const svg = d3.select(svgRef.current);
+        svg.attr("class", "beeswarm-svg");
             let sectors = Array.from(new Set(data.map((d) => d.id)));
             let xCoords = sectors.map((d, i) => 75 + i * 110);
             let xScale = d3.scaleOrdinal().domain(sectors).range(xCoords);
+            let width = svg.style("width");
+            let height = svgRef.current.clientHeight;
+            console.log('Width and height are: ', width, height);
+            svg.selectAll('*').remove();
 
             let yScale = d3
                 .scaleLinear()
                 .domain(d3.extent(data.map((d) => +d["accuracy"])))
-                .range([svgRef.current.clientHeight-50 , 50]);
+                .range([svgRef.current.clientHeight-45 , 50]);
 
-            let color = d3.scaleOrdinal().domain(sectors).range(d3.schemePaired);
+            // let color = d3.scaleOrdinal().domain(sectors).range(d3.schemePaired);
             let Domain = d3.extent(data.map((d) => d["accuracy"]));
             Domain = Domain.map((d) => d);
-            let size = d3.scaleLinear().domain(Domain).range([3, 15]);
-
+            let size = d3.scaleLinear().domain(Domain).range([2, 8]);
+            const yAxis = d3.axisLeft().scale(yScale).ticks(5);
   const xAxis = d3.axisBottom()
         .scale(xScale)
         .tickPadding(5);
-
+        let selectedTaskId = data.filter(d => d['_id'] === props.task);
+        console.log('Selected task id: '. selectedTaskId);
     const xAxisG = svg.append('g')
         .style("font-size", `1rem`)
-          .attr('transform', `translate(0, 400)`);
+        .attr('transform', `translate(0, 527)`);
         svg
             .selectAll(".circ")
             .data(data)
             .enter()
             .append("circle")
             .attr("class", "circ")
-            .attr("stroke", "black")
-            .attr("fill", (d) => color(d.id))
+            .attr("fill", (d) => d3.interpolatePuOr(d.accuracy))
             .attr("r", (d) => size(d["accuracy"]))
             .attr("cx", (d) => xScale(d.id))
             .attr("cy", (d) => yScale(d.accuracy))
+            .each(function(d, i) {
+                var selected = d['_id'] === props.task;
+                // console.log('Current id: ', d['_id']);
+                console.log('Selected is: ', selected);
+                d3.select(this)
+                .attr('stroke', selected ? 'blue' : 'none');
+            })
             .on("mouseover", (event, d) => {
                 let x = event.x,
                     y = event.y,
@@ -77,7 +89,28 @@ const BeeSwarm = (props) => {
                 d3.select(event.currentTarget).style("opacity", 1);
             });
 
-       xAxisG.call(xAxis)
+            const yAxisG = svg.append('g').attr("transform", `translate(75, -20)`);
+            xAxisG.call(xAxis);
+            xAxisG.append('text')
+            .attr('class', 'label')
+            .attr('y', 50)
+            .attr('x', +(width.replace('px', ''))/2 + 'px')
+            .attr('text-anchor', 'middle')
+            .text("Categories for tasks")
+            .style("fill", "gray");
+    
+            yAxisG.call(yAxis);
+            yAxisG.append('g')
+            .append('text')
+            .attr('class', 'label')
+            .attr('x', -height/2)
+            .attr('y', -40)
+            .attr('font-size', '16')
+            .attr('transform', 'rotate(' + -90 + ')')
+            .attr('text-anchor', 'middle')
+            .text("Accuracy of tasks")
+            .style("fill", "gray");
+            
             let simulation = d3
                 .forceSimulation(data)
                 .force(

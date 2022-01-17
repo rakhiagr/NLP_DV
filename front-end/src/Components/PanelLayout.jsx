@@ -51,6 +51,8 @@ const PanelLayout = () => {
     const [networkGraphOpacity, setNetworkGraphOpacity] = useState(0.1);
     const [source_map, setSource_map] = useState({});
     const [category_map, setCategory_map] = useState({});
+    const [modelSelectedOption, setModelSelectedOption] = useState('GPT');
+    const [modelSelectOptions, setModelSelectOptions] = useState([{value: 'GPT', label: 'GPT'}, {value: 'LSTM', label: 'LSTM'}]);
 
     const [biasSelectOptions, setBiasSelectOptions] = useState([
             { value: 't1', label: 'Unique Vocabulary' },
@@ -401,6 +403,27 @@ const PanelLayout = () => {
         tooltip.style.display = 'block';
         tooltip.innerText = 'Test new prompt instance';
     }
+    const focusGroup = (focus, selected) => {
+        var svg;
+        svg = d3.select(".beeswarm-svg");
+        svg.selectAll('.circ')
+        .style("opacity", (d) => {
+            if(d.id === focus) {
+                return 1;
+            }
+            // if(d.id === selected) {
+            //     return 0.8;
+            // }
+            return 0.6;
+        })
+    }
+
+    const unfocusGroup = (d) => {
+        var svg;
+        svg = d3.select(".beeswarm-svg");
+        svg.selectAll('.circ').style("opacity", '1');
+    }
+
     const onSphereButtonMouseLeave = () => {
         document.getElementById('sphere-tooltip').style.display = 'none';
     }
@@ -504,6 +527,17 @@ const PanelLayout = () => {
                     xxl={{ span: panelSpan['two'], order: panelOrder['two'] }}
                     style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
                     <Row>
+                    <Col xs={2} lg={2} xl={2} style={{ padding: 0 }}>
+                            <h1><ClipLoader color={'#9013FE'} loading={beeSwarmloading} size={30} /></h1>
+                        </Col>
+                        <Col xs={2} lg={2} xl={2} style={{ paddingTop : '10px', opacity: 0.5, fontSize: '25px' }}>
+                            Model
+                        </Col>
+                        <Col xs={7} lg={7} xl={7} style={{ padding: 10 }}>
+                            <Select className='modelselector' styles={{width: '250px', display: 'inline'}}
+                                    value={modelSelectOptions.filter(option => option.value === modelSelectedOption)}
+                                    styles={customStyles} options={modelSelectOptions} onChange={(event) => setModelSelectedOption(event.value)}/>
+                        </Col>
                         <Col xs={1} lg={1} xl={1} style={{ padding: 0 }}>
                             <Button variant="light" style={{ padding: 0, opacity: beeSwarmOpacity }}
                                     onMouseEnter={e => {
@@ -564,10 +598,13 @@ const PanelLayout = () => {
                     lg ={{ span: panelSpan['four'], order: panelOrder['four'] }}
                     xl ={{ span: panelSpan['four'], order: panelOrder['four'] }}
                     xxl={{ span: panelSpan['four'], order: panelOrder['four'] }}
-                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid",}} >
+                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
                     <Row>
-                        <Col xs={1} lg={1} xl={1} style={{ padding: 0 }}>
-                            <Button variant="light" style={{ padding: 0, opacity: networkGraphOpacity }}
+                        <Col xs={2} lg={2} xl={2} style={{ padding: 0 }}>
+                            <ClipLoader color={'#9013FE'} loading={netWorkloading} size={30} />
+                        </Col>
+                        <Col xs={10} lg={10} xl={10} style={{ padding: 0, display: 'flex', justifyContent: 'flex-end' }}>
+                            <Button variant="light" style={{ padding: 10, opacity: networkGraphOpacity, marginLeft: 'auto' }}
                                     onMouseEnter={e => {
                                         setNetworkGraphOpacity(1);
                                     }}
@@ -581,7 +618,8 @@ const PanelLayout = () => {
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
-                            <NetworkGraph taskNeighbours={taskNeighbours} task={task} toggleLoading={setNetWorkLoading} />
+                        <NetworkGraph taskNeighbours={taskNeighbours} task={task} toggleLoading={setNetWorkLoading} 
+                            focusGroup={focusGroup} unfocusGroup={unfocusGroup}/>
                         </Col>
                     </Row>
                 </Col>
@@ -594,6 +632,9 @@ const PanelLayout = () => {
                     xxl={{ span: panelSpan['five'], order: panelOrder['five'] }}
                     style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
                     <Row>
+                        <Col xs={4} lg={4} xl={4} style={{ padding: 0 }}>
+                            <h1>Bias <ClipLoader color={'#9013FE'} loading={biasloading} size={30} /> </h1>
+                        </Col>
                         <Col xs={1} lg={1} xl={1} style={{ paddingTop : '10px' }}>
                             <Button variant="light" style={{ padding: 0 }}
                                     onMouseEnter={(event) => onUserPromptButtonMouseEnter(event)}
