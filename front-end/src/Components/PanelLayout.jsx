@@ -408,20 +408,28 @@ const PanelLayout = () => {
         svg = d3.select(".beeswarm-svg");
         svg.selectAll('.circ')
         .style("opacity", (d) => {
-            if(d.id === focus) {
+            if(d.id == focus) {
                 return 1;
             }
-            // if(d.id === selected) {
-            //     return 0.8;
-            // }
-            return 0.6;
+            if(d.id == selected) {
+                return 0.7;
+            }
+            else {
+                return 0.2;
+            }
+        })
+        .attr("stroke", (d) => {
+            return d.id == selected ? 'black' : 'none';
+        })
+        .attr("stroke-width", (d) => {
+            return d.id == selected ? '2' : '1';
         })
     }
 
     const unfocusGroup = (d) => {
         var svg;
         svg = d3.select(".beeswarm-svg");
-        svg.selectAll('.circ').style("opacity", '1');
+        svg.selectAll('.circ').style("opacity", '1').attr("stroke", 'none');
     }
 
     const onSphereButtonMouseLeave = () => {

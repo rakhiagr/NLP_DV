@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import embeddings from "./embeddings";
 import CONSTANTS from "./constants";
+import { NonceProvider } from 'react-select';
 
 const BeeSwarm = (props) => {
     const svgRef = useRef();
@@ -55,17 +56,10 @@ const BeeSwarm = (props) => {
             .enter()
             .append("circle")
             .attr("class", "circ")
-            .attr("fill", (d) => d3.interpolatePuOr(d.accuracy))
+            .attr("fill", (d) => d3.interpolatePuRd(d.accuracy))
             .attr("r", (d) => size(d["accuracy"]))
             .attr("cx", (d) => xScale(d.id))
             .attr("cy", (d) => yScale(d.accuracy))
-            .each(function(d, i) {
-                var selected = d['_id'] === props.task;
-                // console.log('Current id: ', d['_id']);
-                console.log('Selected is: ', selected);
-                d3.select(this)
-                .attr('stroke', selected ? 'blue' : 'none');
-            })
             .on("mouseover", (event, d) => {
                 let x = event.x,
                     y = event.y,

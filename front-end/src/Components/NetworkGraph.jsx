@@ -57,6 +57,8 @@ const NetworkGraph = (props) => {
           .enter().append("circle")
             .attr("r", 5)
             .attr("fill", (d) => color(d.level))
+            .attr("node-type", (d) => {
+                return d.id === props.task ? 'selected' : 'neighbour';});
 
         const focus = (event, d) => {
             fetch(`/definition/${d.id}`)
@@ -66,7 +68,6 @@ const NetworkGraph = (props) => {
                     focussed['strength'] = linkElements._groups[0].map(d => d.__data__).map(d =>  ({ source : d.source.id, strength : d.strength } )).filter(e => e.source === d.id)[0].strength;
                     focussed['definition'] = result[0]['definition'];
                     setFocusedTaskDefinition(focussed);
-                    props.focusGroup('ID'+d.index, 'ID9');
                 })
 
             var index = d3.select(event.target).datum().index;
@@ -76,6 +77,9 @@ const NetworkGraph = (props) => {
             linkElements.style("opacity", function(o) {
                 return o.source.index === index || o.target.index === index ? 1 : 0.1;
             });
+            var source_node = nodeElements.filter(function(d) {return d3.select(this).attr("node-type") == 'selected'}).nodes();
+            console.log('Source Node: ', source_node);
+            props.focusGroup('task_'+(index+1), 'task_'+(source_node[0].__data__.index+1));
         }
         const unfocus = () => {
            nodeElements.style("opacity", 1);
