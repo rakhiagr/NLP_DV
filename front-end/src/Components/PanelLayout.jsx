@@ -653,7 +653,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
                     <Row>
                         <Col xs={4} lg={4} xl={4} style={{ padding: 0 }}>
-                            <h1>Bias <ClipLoader color={'#9013FE'} loading={biasloading} size={30} /> </h1>
+                            <h1> <ClipLoader color={'#9013FE'} loading={biasloading} size={30} /> </h1>
                         </Col>
                         <Col xs={1} lg={1} xl={1} style={{ paddingTop : '10px' }}>
                             <Button variant="light" style={{ padding: 0 }}

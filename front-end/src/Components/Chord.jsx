@@ -30,13 +30,11 @@ const Chord = (props) => {
                     category_mapper[embeddings[i].id] = embeddings[i].category;
                 }
             }
-            
+            console.log(category_mapper);
             let id = Object.keys(data);
             console.log(data);
             for(const key in id){
                 const item = data[id[key]];
-                // console.log(item[0]);
-                // console.log(typeof(item));
                 for(var i = 0; i<10; i++){
                     if(data[id[key]][i] < 0.24)
                     data[id[key]][i] = 0;
@@ -54,11 +52,10 @@ const Chord = (props) => {
                 matrix.push(data[key]);
             }
 
-            const outerRadius = (svgRef.current.clientWidth/2) - 95;
-            const innerRadius = outerRadius - 20;
-            // const color = d3.scaleSequential().domain([0,matrix.length])
-            //     .interpolator(d3.interpolateInferno);
-            // const color = d3.interpolatePuRd(d.accuracy)
+            const outerRadius = (svgRef.current.clientWidth/2) - 170;
+            const innerRadius = outerRadius - 15;
+            const color = d3.scaleSequential().domain([0,matrix.length])
+                .interpolator(d3.interpolatePuRd);
             const opacityDefault = 0.8;
 
             const chord = d3.chord()
@@ -84,25 +81,32 @@ const Chord = (props) => {
                 .on("mouseout", mouseoutChord);
 
             outerCircle.append("path")
-                .style("fill", function(d) { return d3.interpolatePuRd(d.index); })
+                .style("fill", function(d) { return color(d.index); })
                 .attr("id", function(d, i) { return "group" + d.index; })
                 .attr("d", arc);
 
+
+
             outerCircle.append("text")
-                .attr("x", 6)
-                .attr("dy", 15)
-                .append("textPath")
-                .attr("xlink:href", function(d) { return "#group" + d.index; })
-                .text(function(chords, i){
-                    return category_mapper[Object.keys(props.taskNeighbours[i])[0]].substring(0,15);
+                .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
+                .attr("dy", ".35em")
+                .attr("class", "titles")
+                .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+                .attr("transform", function(d) {
+                  return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+                  + "translate(" + (outerRadius + 4) + ")"
+                  + (d.angle > Math.PI ? "rotate(180)" : "");
                 })
-                .style("fill", "white");
+                .text(function(chords, i){
+                    return category_mapper[Object.keys(props.taskNeighbours[i])[0]].split(" ").join("\n");
+                })
+                .style("font-size", 10);
 
             svg.selectAll("path.chord")
                 .data(function(chords) { return chords; })
                 .enter().append("path")
                 .attr("class", "chord")
-                .style("fill", function(d) { return d3.interpolatePuRd(d.source.index); })
+                .style("fill", function(d) { return color(d.source.index); })
                 .style("opacity", opacityDefault)
                 .attr("d", ribbonPath);
 
