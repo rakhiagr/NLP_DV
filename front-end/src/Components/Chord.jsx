@@ -10,15 +10,18 @@ const Chord = (props) => {
     useEffect(() => {
         if(props.task !== '' ){
             props.toggleLoading(true);
+            // console.log(props.task);
             fetch(`/chord/${props.task}`)
                 .then(response => response.json())
                 .then(result => {
                     props.toggleLoading(false);
                     setData(result);
+                    // console.log("result");
+                    // console.log(result);
                 });
         }
     },[props.task]);
-
+    // console.log(result);
     useEffect(() => {
         if(data.length !== 0 ){
             const category_mapper = {};
@@ -27,6 +30,19 @@ const Chord = (props) => {
                     category_mapper[embeddings[i].id] = embeddings[i].category;
                 }
             }
+            
+            let id = Object.keys(data);
+            console.log(data);
+            for(const key in id){
+                const item = data[id[key]];
+                // console.log(item[0]);
+                // console.log(typeof(item));
+                for(var i = 0; i<10; i++){
+                    if(data[id[key]][i] < 0.24)
+                    data[id[key]][i] = 0;
+                }
+            }
+            console.log(data);
             d3.select(svgRef.current).selectAll("*").remove();
 
             const index_task_id_map = {}
@@ -40,8 +56,9 @@ const Chord = (props) => {
 
             const outerRadius = (svgRef.current.clientWidth/2) - 95;
             const innerRadius = outerRadius - 20;
-            const color = d3.scaleSequential().domain([0,matrix.length])
-                .interpolator(d3.interpolateInferno);
+            // const color = d3.scaleSequential().domain([0,matrix.length])
+            //     .interpolator(d3.interpolateInferno);
+            // const color = d3.interpolatePuRd(d.accuracy)
             const opacityDefault = 0.8;
 
             const chord = d3.chord()
@@ -67,7 +84,7 @@ const Chord = (props) => {
                 .on("mouseout", mouseoutChord);
 
             outerCircle.append("path")
-                .style("fill", function(d) { return color(d.index); })
+                .style("fill", function(d) { return d3.interpolatePuRd(d.index); })
                 .attr("id", function(d, i) { return "group" + d.index; })
                 .attr("d", arc);
 
@@ -85,7 +102,7 @@ const Chord = (props) => {
                 .data(function(chords) { return chords; })
                 .enter().append("path")
                 .attr("class", "chord")
-                .style("fill", function(d) { return color(d.source.index); })
+                .style("fill", function(d) { return d3.interpolatePuRd(d.source.index); })
                 .style("opacity", opacityDefault)
                 .attr("d", ribbonPath);
 

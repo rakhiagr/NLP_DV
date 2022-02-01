@@ -42,8 +42,9 @@ const PanelLayout = () => {
     const [icon, setIcon] = useState('category');
     const [task, setTask] = useState('');
     const [taskNeighbours, setTaskNeighbours] = useState([]);
-    const [biasSelectedOption, setBiasSelectedOption] = useState('Definition');
-    const [chordSelectedOption, setChordSelectedOption] = useState('t2');
+    const [biasSelectedOption, setBiasSelectedOption] = useState('t1');
+    const [chordSelectedOption, setChordSelectedOption] = useState('Definition');
+    const [chordSelectedOption2, setChordSelectedOption2] = useState('STS');
     const [sphereSelectedOption, setSphereSelectedOption] = useState('Category');
     const [beeSwarmOpacity, setBeeSwarmOpacity] = useState(0.1);
     const [chordOpacity, setChordOpacity] = useState(0.1);
@@ -80,6 +81,11 @@ const PanelLayout = () => {
         { value: 'Negative Example', label: 'Negative Example' },
     ]
 );
+const [chordSelectOptions2, setChordSelectOptions2] = useState([
+    { value: 'STS', label: 'STS' },
+    { value: 'EmbeddingDistance', label: 'Embedding Distance' },
+]
+);
     const [show, setShow] = useState(false);
     const [instance, setInstance] = useState('');
 
@@ -108,6 +114,7 @@ const PanelLayout = () => {
 
     const handleChordSelectChange = (event) => {
         setChordSelectedOption(event.value);
+        setChordSelectedOption2(event.value);
     }
 
     const openUserPrompt = (event) => {
@@ -575,11 +582,16 @@ const PanelLayout = () => {
                     style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
                     <Row>
                         <Col xs={6} lg={6} xl={6} style={{ paddingTop : '10px' }}>
-                            <Select style={{width: '300px' }}
+                            <Select style={{width: '150px' }}
                                     value={chordSelectOptions.filter(option => option.value === chordSelectedOption)}
                                     styles={customStyles} options={chordSelectOptions} onChange={(event) => handleChordSelectChange(event)}  />
                         </Col>
-                        <Col xs={1} lg={1} xl={1} style={{ padding: 0 }}>
+                        <Col xs={6} lg={6} xl={6} style={{ paddingTop : '10px' }}>
+                            <Select style={{width: '50px' }}
+                                    value={chordSelectOptions2.filter(option => option.value === chordSelectedOption2)}
+                                    styles={customStyles} options={chordSelectOptions2} onChange={(event) => handleChordSelectChange(event)}  />
+                        </Col>
+                        {/* <Col xs={1} lg={1} xl={1} style={{ paddingTop: '10px' }}>
                             <Button variant="light" style={{ padding: 0, opacity: chordOpacity }}
                                     onMouseEnter={e => {
                                         setChordOpacity(1);
@@ -590,7 +602,7 @@ const PanelLayout = () => {
                                     onClick={() => expandPanelClickHandler('three')}>
                                 <AiOutlineExpandAlt style={{ fontSize: "2rem" }}></AiOutlineExpandAlt>
                             </Button>
-                        </Col>
+                        </Col> */}
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
