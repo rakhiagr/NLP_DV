@@ -49,7 +49,7 @@ const BeeSwarm = (props) => {
         console.log('Selected task id: '. selectedTaskId);
     const xAxisG = svg.append('g')
         .style("font-size", `1rem`)
-        .attr('transform', `translate(0, 527)`);
+        .attr('transform', `translate(0, ${svgRef.current.clientHeight-65})`);
         svg
             .selectAll(".circ")
             .data(data)
