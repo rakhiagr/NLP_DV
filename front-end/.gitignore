@@ -24,3 +24,5 @@ yarn-error.log*
 
 # tasks
 /tasks/*
+task*
+../task*
