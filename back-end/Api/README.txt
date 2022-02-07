@@ -1,3 +1,0 @@
-Install Flask
-Install Pymongo
-
