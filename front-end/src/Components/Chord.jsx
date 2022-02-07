@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 import embeddings from "./embeddings";
+import CONSTANTS from "./constants";
 
 const Chord = (props) => {
     const svgRef = useRef();
@@ -133,7 +134,31 @@ const Chord = (props) => {
                 .attr("class", "chord")
                 .style("fill", function(d) { return color(d.source.index); })
                 .style("opacity", opacityDefault)
-                .attr("d", ribbonPath);
+                .attr("d", ribbonPath).on("mouseover", (event, d) => {
+                    // console.log(d);
+                    // console.log("mouseover");
+                    let x = event.x,
+                        y = event.y,
+                        tooltip = document.getElementById('sphere-tooltip')
+                    tooltip.style.top = (y + 10) + 'px';
+                    tooltip.style.left = (x + 10) + 'px';
+                    tooltip.style.display = 'block';
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.overflow = 'hidden';
+                    tooltip.style.padding = '10px';
+                    tooltip.style.background = `rgba(0, 0, 0, ${CONSTANTS.toolTipOpacity})`;
+                    tooltip.style.color = 'white';
+                    tooltip.style.maxWidth = '200px';
+                    tooltip.style.maxHeight = '100px';
+                    tooltip.style.border = '1px solid black';
+                    tooltip.innerText = d.source.value;
+                    d3.select(event.currentTarget).style("opacity", 0.8).style("stroke", 'black');
+                })
+                .on("mouseleave", (event) =>{
+                    // console.log("mouseleave");
+                    document.getElementById('sphere-tooltip').style.display = 'none';
+                    d3.select(event.currentTarget).style("opacity", 1).style("stroke", 'none');
+                });
 
             function fade(opacity) {
                 return function(event,d) {
