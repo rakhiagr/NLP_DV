@@ -448,7 +448,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         svg = d3.select(".chord-svg");
         svg.selectAll('.chord')
         .style("opacity", (d) => {
-            console.log("d", d);
+            // console.log("d", d);
             if(d.source.index == focus) {
                 return 1;
             }
@@ -478,13 +478,19 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                 return 0.2;
             }
         })
-    }
+        .attr("stroke", (d) => {
+            return d.index == selected ? 'black' : 'none';
+        })
+        .attr("stroke-width", (d) => {
+            return d.index == selected ? '2' : '1';
+    });
+}
 
     const unfocusGroup_chord = (d) => {
         var svg;
         svg = d3.select(".chord-svg");
         svg.selectAll('.chord').style("opacity", '1').attr("stroke", 'none');
-        svg.selectAll('.group').style("opacity",1);
+        svg.selectAll('.group').style("opacity",1).attr("stroke", 'none');
     }
 
     const onSphereButtonMouseLeave = () => {
