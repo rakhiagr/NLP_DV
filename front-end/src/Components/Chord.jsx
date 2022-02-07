@@ -11,18 +11,30 @@ const Chord = (props) => {
     useEffect(() => {
         if(props.task !== '' ){
             props.toggleLoading(true);
+<<<<<<< HEAD
             // console.log(props.task);
+=======
+            
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
             fetch(`/chord/${props.task}`)
                 .then(response => response.json())
                 .then(result => {
                     props.toggleLoading(false);
                     setData(result);
+<<<<<<< HEAD
                     // console.log("result");
                     // console.log(result);
                 });
         }
     },[props.task]);
     // console.log(result);
+=======
+                    
+                });
+        }
+    },[props.task]);
+    
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
     useEffect(() => {
         if(data.length !== 0 ){
             const category_mapper = {};
@@ -31,9 +43,15 @@ const Chord = (props) => {
                     category_mapper[embeddings[i].id] = embeddings[i].category;
                 }
             }
+<<<<<<< HEAD
             // console.log(category_mapper);
             let id = Object.keys(data);
             // console.log(data);
+=======
+            
+            let id = Object.keys(data);
+            
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
             for(const key in id){
                 const item = data[id[key]];
                 for(var i = 0; i<10; i++){
@@ -41,8 +59,12 @@ const Chord = (props) => {
                     data[id[key]][i] = 0;
                 }
             }
+<<<<<<< HEAD
             console.log("All data", data);
             console.log("Main task", props.task);
+=======
+            
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
             d3.select(svgRef.current).selectAll("*").remove();
 
             const index_task_id_map = {}
@@ -53,11 +75,16 @@ const Chord = (props) => {
                 count = count +1;
                 matrix.push(data[key]);
             }
+<<<<<<< HEAD
             // console.log(matrix);
             //let selectedTaskId = data.filter(d => d['_id'] === props.task);
             //console.log(selectedTaskId);
 
             const outerRadius = (svgRef.current.clientHeight/1.5) - 170;
+=======
+
+            const outerRadius = (svgRef.current.clientWidth/2) - 170;
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
             const innerRadius = outerRadius - 15;
             const color = d3.scaleSequential().domain([0,matrix.length])
                 .interpolator(d3.interpolateRainbow);
@@ -80,16 +107,29 @@ const Chord = (props) => {
                 .data(function(chords) { return chords.groups; })
                 .enter().append("g")
                 .attr("class", "group")
+<<<<<<< HEAD
                 .on("mouseover", fade(.1))
                 .on("mouseout", fade(opacityDefault))
                 .on("click", mouseoverChord)
                 .on("mouseout", mouseoutChord);
 
             outerCircle.append("path")
+=======
+                .on("mouseover", fade(.1, true))
+                .on("mouseleave", (event) =>{
+                    document.getElementById('sphere-tooltip').style.display = 'none';
+                    d3.select(event.currentTarget).style("opacity", 1).style("stroke", 'none');
+                })
+                .on("mouseout", fade(opacityDefault, false))
+                .on("mouseout", mouseoutChord);
+
+        var path = outerCircle.append("path")
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
                 .style("fill", function(d) { return color(d.index); })
                 .attr("id", function(d, i) { return "group" + d.index; })
                 .attr("d", arc);
 
+<<<<<<< HEAD
             // outerCircle.append("text")
             //     .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
             //     .attr("dy", ".35em")
@@ -127,6 +167,24 @@ const Chord = (props) => {
             //     .style("fill", "black")
             //     .style("font-size", "10px")
             //     .style("font-weight", "14");
+=======
+        var groupText = outerCircle.append("text")
+            .attr("dy", (outerRadius - innerRadius) / 2 + 4)
+            .attr("text-anchor", "middle");
+
+          var groupTextPath = groupText
+            .append("textPath")
+            .attr("xlink:href", function(d) {
+              return "#group" + d.index;
+            })
+            .attr("startOffset", function(d) {
+              var length = path.nodes()[d.index].getTotalLength();
+              return (25-(50 *outerRadius)/length+(50 *innerRadius)/length) + "%";
+            })
+            .text(function(d) {
+              return "t_" + (d.index+1);
+            }).style("font-size", "14px");
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
 
             svg.selectAll("path.chord")
                 .data(function(chords) { return chords; })
@@ -135,8 +193,11 @@ const Chord = (props) => {
                 .style("fill", function(d) { return color(d.source.index); })
                 .style("opacity", opacityDefault)
                 .attr("d", ribbonPath).on("mouseover", (event, d) => {
+<<<<<<< HEAD
                     // console.log(d);
                     // console.log("mouseover");
+=======
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
                     let x = event.x,
                         y = event.y,
                         tooltip = document.getElementById('sphere-tooltip')
@@ -154,18 +215,54 @@ const Chord = (props) => {
                     tooltip.innerText = d.source.value;
                     d3.select(event.currentTarget).style("opacity", 0.8).style("stroke", 'black');
                 })
+<<<<<<< HEAD
                 .on("mouseleave", (event) =>{
                     // console.log("mouseleave");
+=======
+                
+                .on("mouseleave", (event) =>{
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
                     document.getElementById('sphere-tooltip').style.display = 'none';
                     d3.select(event.currentTarget).style("opacity", 1).style("stroke", 'none');
                 });
 
+<<<<<<< HEAD
             function fade(opacity) {
+=======
+            function fade(opacity, flag) {
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
                 return function(event,d) {
                     svg.selectAll("path.chord")
                         .filter(function(data) { return data.source.index !== d.index && data.target.index !== d.index; })
                         .transition()
                         .style("opacity", opacity);
+<<<<<<< HEAD
+=======
+                        if(flag === true){
+                            let x = event.x,
+                                y = event.y,
+                                tooltip = document.getElementById('sphere-tooltip')
+                            tooltip.style.top = (y + 10) + 'px';
+                            tooltip.style.left = (x + 10) + 'px';
+                            tooltip.style.display = 'block';
+                            tooltip.style.position = 'absolute';
+                            tooltip.style.overflow = 'hidden';
+                            tooltip.style.padding = '10px';
+                            tooltip.style.background = `rgba(0, 0, 0, ${CONSTANTS.toolTipOpacity})`;
+                            tooltip.style.color = 'white';
+                            tooltip.style.maxWidth = '200px';
+                            tooltip.style.maxHeight = '100px';
+                            tooltip.style.border = '1px solid black';
+                            //console.log(category_mapper[Object.keys(props.taskNeighbours[d.index])]);
+                            tooltip.innerText = category_mapper[Object.keys(props.taskNeighbours[d.index])];
+                            d3.select(event.currentTarget).style("opacity", 0.8);
+                        }
+                        else{
+                            document.getElementById('sphere-tooltip').style.display = 'none';
+                            d3.select(event.currentTarget).style("opacity", 1).style("stroke", 'none');
+                        }
+                        
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
                 };
             }
             function mouseoverChord(event,d,i) {
@@ -184,7 +281,10 @@ const Chord = (props) => {
                     .style("opacity", opacityDefault);
             }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
         }
     },[data]);
 
@@ -196,4 +296,77 @@ const Chord = (props) => {
     );
 }
 
+<<<<<<< HEAD
 export default Chord;
+=======
+export default Chord;
+
+
+
+
+
+// outerCircle.append("text")
+            // .attr("class", "titles")
+            //     .attr("x", 9)
+            //     .attr("dy", -20)
+            //     .append("textPath")
+            //     .attr("xlink:href", function(d) { return "#group" + d.index; })
+            //     .text(function(chords, i){
+            //         let l = category_mapper[Object.keys(props.taskNeighbours[i])[0]];
+            //         return l.split(" ")[0];
+            //     })
+            //     .append("tspan")
+            //         .attr("x", 9)
+            //         .attr("dy", 13)
+            //         .text(function(chords, i) {
+            //             return category_mapper[Object.keys(props.taskNeighbours[i])[0]].split(" ")[1];
+            //         })
+            //     .style("fill", "black")
+            //     .style("font-size", "10px")
+            //     .style("font-weight", "14");
+
+
+
+ // svg.selectAll('.group').append("text")
+                // .attr("class", "titles")
+                //     .attr("x",)
+                //     .attr("dy", -20)
+                //     .append("textPath")
+                //     .attr("xlink:href", function(d) { return "#group" + d.index; })
+                //     .text(function(d) { 
+                //         console.log(d);
+                //         return "t_" + (d.index+1); })
+                //     .style("fill", "black")
+                // .style("font-size", "15px")
+                // .style("font-weight", 400);
+
+
+// outerCircle.append("text")
+            //     .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
+            //     .attr("dy", ".35em")
+            //     .attr("class", "titles")
+            //     .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
+            //     .attr("transform", function(d) {
+            //       return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
+            //       + "translate(" + (outerRadius + 4) + ")"
+            //       + (d.angle > Math.PI ? "rotate(180)" : "");
+            //     })
+            //     .text(function(chords, i){
+            //         return category_mapper[Object.keys(props.taskNeighbours[i])[0]].split(" ").join("\n");
+            //     })
+            //     .style("font-size", 10);
+
+
+// outerCircle.append("text")
+            //     .attr("x", )
+            //     .attr("dy", 13)
+            //     .append("textPath")
+            //     .attr("xlink:href", function(d) { return "#group" + d.index; })
+            // //    .text(function(chords, i){return names[i];})
+            //     .text(function(d) { 
+            //             // console.log(d);
+            //             return "t_" + (d.index+1); })
+            //    .style("fill", "black")
+            //     .style("font-size", "15px")
+            //     .style("font-weight", 500);
+>>>>>>> 6633fb246f8e470c0d4f9245fc8c47180c35481c
