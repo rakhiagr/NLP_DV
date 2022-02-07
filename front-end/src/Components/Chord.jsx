@@ -40,7 +40,8 @@ const Chord = (props) => {
                     data[id[key]][i] = 0;
                 }
             }
-            // console.log(data);
+            console.log("All data", data);
+            console.log("Main task", props.task);
             d3.select(svgRef.current).selectAll("*").remove();
 
             const index_task_id_map = {}
@@ -52,11 +53,13 @@ const Chord = (props) => {
                 matrix.push(data[key]);
             }
             // console.log(matrix);
+            //let selectedTaskId = data.filter(d => d['_id'] === props.task);
+            //console.log(selectedTaskId);
 
             const outerRadius = (svgRef.current.clientWidth/2) - 170;
             const innerRadius = outerRadius - 15;
             const color = d3.scaleSequential().domain([0,matrix.length])
-                .interpolator(d3.interpolatePuRd);
+                .interpolator(d3.interpolateRainbow);
             const opacityDefault = 0.8;
 
             const chord = d3.chord()
@@ -67,7 +70,7 @@ const Chord = (props) => {
             const ribbonPath = d3.ribbon()
                 .radius(innerRadius);
 
-            const svg = d3.select(svgRef.current)
+            const svg = d3.select(svgRef.current).attr("class", "chord-svg")
                 .append("g")
                 .attr("transform", `translate(${svgRef.current.clientWidth/2},${svgRef.current.clientHeight/2})`)
                 .datum(chord(matrix));
@@ -101,28 +104,28 @@ const Chord = (props) => {
             //     })
             //     .style("font-size", 10);
 
-            outerCircle.append("text")
-            .attr("class", "titles")
-                .attr("x", 9)
-                .attr("dy", -20)
-                .append("textPath")
-                .attr("xlink:href", function(d) { return "#group" + d.index; })
-                .text(function(chords, i){
-                    let l = category_mapper[Object.keys(props.taskNeighbours[i])[0]];
-                    // console.log(l);
-                    //l = l.split(" ").join("\n");
-                    // console.log(l);
-                    return l.split(" ")[0];
-                })
-                .append("tspan")
-                    .attr("x", 9)
-                    .attr("dy", 13)
-                    .text(function(chords, i) {
-                        return category_mapper[Object.keys(props.taskNeighbours[i])[0]].split(" ")[1];
-                    })
-                .style("fill", "black")
-                .style("font-size", "10px")
-                .style("font-weight", "14");
+            // outerCircle.append("text")
+            // .attr("class", "titles")
+            //     .attr("x", 9)
+            //     .attr("dy", -20)
+            //     .append("textPath")
+            //     .attr("xlink:href", function(d) { return "#group" + d.index; })
+            //     .text(function(chords, i){
+            //         let l = category_mapper[Object.keys(props.taskNeighbours[i])[0]];
+            //         // console.log(l);
+            //         //l = l.split(" ").join("\n");
+            //         // console.log(l);
+            //         return l.split(" ")[0];
+            //     })
+            //     .append("tspan")
+            //         .attr("x", 9)
+            //         .attr("dy", 13)
+            //         .text(function(chords, i) {
+            //             return category_mapper[Object.keys(props.taskNeighbours[i])[0]].split(" ")[1];
+            //         })
+            //     .style("fill", "black")
+            //     .style("font-size", "10px")
+            //     .style("font-weight", "14");
 
             svg.selectAll("path.chord")
                 .data(function(chords) { return chords; })

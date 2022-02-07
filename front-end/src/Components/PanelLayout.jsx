@@ -410,6 +410,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         tooltip.style.display = 'block';
         tooltip.innerText = 'Test new prompt instance';
     }
+
     const focusGroup = (focus, selected) => {
         var svg;
         svg = d3.select(".beeswarm-svg");
@@ -437,6 +438,53 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         var svg;
         svg = d3.select(".beeswarm-svg");
         svg.selectAll('.circ').style("opacity", '1').attr("stroke", 'none');
+    }
+
+
+    const focusGroup_chord = (focus, selected) => {
+        console.log(focus);
+        console.log(selected);
+        var svg;
+        svg = d3.select(".chord-svg");
+        svg.selectAll('.chord')
+        .style("opacity", (d) => {
+            console.log("d", d);
+            if(d.source.index == focus) {
+                return 1;
+            }
+            if(d.source.index == selected) {
+                return 0.7;
+            }
+            else {
+                return 0.2;
+            }
+        })
+        .attr("stroke", (d) => {
+            return d.source.index == selected ? 'black' : 'none';
+        })
+        .attr("stroke-width", (d) => {
+            return d.source.index == selected ? '2' : '1';
+        })
+
+        svg.selectAll('.group').style("opacity", (d) => {
+            console.log(d);
+            if(d.index == focus) {
+                return 1;
+            }
+            if(d.index == selected) {
+                return 0.7;
+            }
+            else {
+                return 0.2;
+            }
+        })
+    }
+
+    const unfocusGroup_chord = (d) => {
+        var svg;
+        svg = d3.select(".chord-svg");
+        svg.selectAll('.chord').style("opacity", '1').attr("stroke", 'none');
+        svg.selectAll('.group').style("opacity",1);
     }
 
     const onSphereButtonMouseLeave = () => {
@@ -639,6 +687,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
                         <NetworkGraph taskNeighbours={taskNeighbours} task={task} toggleLoading={setNetWorkLoading} 
+                            focusGroup_chord={focusGroup_chord} unfocusGroup_chord={unfocusGroup_chord}
                             focusGroup={focusGroup} unfocusGroup={unfocusGroup}/>
                         </Col>
                     </Row>

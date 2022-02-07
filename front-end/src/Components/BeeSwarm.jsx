@@ -21,7 +21,6 @@ const BeeSwarm = (props) => {
         }
     },[props.task]);
     useEffect(() => {
-
         const svg = d3.select(svgRef.current);
         svg.attr("class", "beeswarm-svg");
             let sectors = Array.from(new Set(data.map((d) => d.id)));

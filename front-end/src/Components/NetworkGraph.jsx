@@ -80,11 +80,13 @@ const NetworkGraph = (props) => {
             var source_node = nodeElements.filter(function(d) {return d3.select(this).attr("node-type") == 'selected'}).nodes();
             console.log('Source Node: ', source_node);
             props.focusGroup('task_'+(index+1), 'task_'+(source_node[0].__data__.index+1));
+            props.focusGroup_chord((index), (source_node[0].__data__.index));
         }
         const unfocus = () => {
            nodeElements.style("opacity", 1);
            linkElements.style("opacity", 1);
            props.unfocusGroup();
+           props.unfocusGroup_chord();
         }
 
         nodeElements.on("mouseover", focus).on("mouseout", unfocus);
