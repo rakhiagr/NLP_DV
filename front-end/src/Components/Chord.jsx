@@ -55,7 +55,7 @@ const Chord = (props) => {
             const outerRadius = (svgRef.current.clientWidth/2) - 170;
             const innerRadius = outerRadius - 35;
             const color = d3.scaleSequential().domain([0,matrix.length])
-                .interpolator(d3.interpolateInferno);
+                .interpolator(d3.interpolateYlGnBu);
             const opacityDefault = 0.8;
 
             const chord = d3.chord()
