@@ -550,7 +550,7 @@ for key in source_colour_dict:
     source_colour_dict2[key] = source_colour_dict[key]
     source_colour_dict2[key.lower()] = source_colour_dict[key]
 
-with open('E:\\CSE578\\Project\\New Project\\sriram-asu\\front-end\\src\\Components\\embeddings.js', 'w') as convert_file:
+with open(r'F:\Code\DV\Project\NLP_DV\front-end\src\Components\embeddings.js', 'w') as convert_file:
     convert_file.write('let embeddings = [')
     for emb in task_definitions:
         category_number = str(emb['categories'][0])
