@@ -55,7 +55,7 @@ const BeeSwarm = (props) => {
             .enter()
             .append("circle")
             .attr("class", "circ")
-            .attr("fill", (d) => d3.interpolatePuRd(d.accuracy))
+            .attr("fill", (d) => d3.interpolateInferno(d.accuracy))
             .attr("r", (d) => size(d["accuracy"]))
             .attr("cx", (d) => xScale(d.id))
             .attr("cy", (d) => yScale(d.accuracy))
