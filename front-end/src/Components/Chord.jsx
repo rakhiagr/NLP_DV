@@ -55,7 +55,7 @@ const Chord = (props) => {
             const outerRadius = (svgRef.current.clientWidth/2) - 170;
             const innerRadius = outerRadius - 35;
             const color = d3.scaleSequential().domain([0,matrix.length])
-                .interpolator(d3.interpolateYlGnBu);
+                .interpolator(d3.interpolate("#F4D03F", "#884EA0"));
             const opacityDefault = 0.8;
 
             const chord = d3.chord()
@@ -103,7 +103,7 @@ const Chord = (props) => {
             })
             .text(function(d) {
               return "t_" + (d.index+1);
-            }).style("font-size", "15px").style("fill", "white").style("font-weight", "500");
+            }).style("font-size", "15px").style("fill", "#273746").style("font-weight", "500");
 
             svg.selectAll("path.chord")
                 .data(function(chords) { return chords; })
