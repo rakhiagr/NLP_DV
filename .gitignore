@@ -1613,3 +1613,4 @@ tasks/tasks/task1723_civil_comments_sexuallyexplicit_classification.json
 tasks/tasks/task1724_civil_comments_insult_classification.json
 tasks/tasks/task1725_civil_comments_severtoxicity_classification.json
 tasks/tasks/task1726_mathqa_correct_answer_generation.json
+front-end/src/Components/embeddings.js
