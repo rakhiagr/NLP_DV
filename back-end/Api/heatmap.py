@@ -108,7 +108,7 @@ def calculate_heat(selected_task):
     def_df4 = pd.concat([def_df3, df_repeated], axis=1)
     def_df4 = def_df4[['group','variable','value']]
     def_df4['index'] = def_df4.index
-    def_df4.to_csv('C:\\Users\\Admin\\IdeaProjects\\project_mentored_project_3_group-nlp-test-bed\\back-end\\Api\\data_heatmap.csv', sep=',', index=False)
+    def_df4.to_csv('E:\\CSE578\\Project\\NLP_DV\\back-end\\Api\\data_heatmap.csv', sep=',', index=False)
     # print(def_df4)
     # d = def_df4.to_dict()
     # j = json.dumps(d)
@@ -117,7 +117,7 @@ def calculate_heat(selected_task):
     data = {}
 
     # Open a csv reader called DictReader
-    with open('C:\\Users\\Admin\\IdeaProjects\\project_mentored_project_3_group-nlp-test-bed\\back-end\\Api\\data_heatmap.csv', encoding='utf-8') as csvf:
+    with open('E:\\CSE578\\Project\\NLP_DV\\back-end\\Api\\data_heatmap.csv', encoding='utf-8') as csvf:
         csvReader = csv.DictReader(csvf)
 
         # Convert each row into a dictionary
