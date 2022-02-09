@@ -88,7 +88,7 @@ const Chord = (props) => {
                 .attr("id", function(d, i) { return "group" + d.index; })
                 .attr("d", arc);
 
-        var groupText = outerCircle.append("text")
+        var groupText = outerCircle.append("text").attr("class","task_text")
             .attr("dy", (outerRadius - innerRadius) / 2 + 4)
             .attr("text-anchor", "middle");
 

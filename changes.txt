@@ -12,23 +12,25 @@ Throughout the interface, follow conventional of task_1-task_9, selected_task in
 
 Sphere:
 
-Change toggle to a dropdown
+Change toggle to a dropdown: Source Dataset and Task category
 Increase tooltip opacity
 Have a minimizable box with a legend for all the points (as a scrollable div)
-The sphere zoom and pan controls need to be specified in gray text
+The sphere zoom and pan controls need to be specified in gray text below the sphere
 On hover:
 Thick black border
 Opacity 1 for all points of same color
 Opacity 0.8 or lesser for different colored points
 On click:
-Highlight border 
+Highlight border for all the selected task 
 Opacity 1
 Rest grayscale
 
 
 Network:
 
-Color points based on similarity from selected task (mono/bi-chromatic linear scale)
+The definition of the selected task should fit in the box, it should not be scrollable.
+
+Color points based on similarity from selected task (mono/bi-chromatic linear scale) Mono could be the PureRd we used and Bi could be the current one
 Can have options to select different color legends in a drop down
 Modify the threshold a bit to prevent it from looking like a hub center node- there should be links between the nearest neighbors as well
 Increase opacity on hover for the other tasks so the network remains visible- not seen rn
@@ -48,8 +50,8 @@ Beeswarm:
 Decrease node sizes
 Black outline for selected task
 For focus task hovering, decrease the opacity of the focused hover to 1, selected to 0.8, rest of the tasks to 0.6
-Color based on network graph color scale
-Labels for the axes
+Color based on network graph color scale. So suppose task 1 or node 1 in network gets x color, then the same task1 in beeswarm should get x color.
+Labels for the axes, and it should say Accuracy with this model like the selected model
 Have a dummy dropdown to show selected model as GPT_3
 On hover of the instance, it would be good to display the instance text in a textarea instead of the tooltip (optional)
 
@@ -61,7 +63,7 @@ Highlighting similar to beeswarm
 Have a threshold for chord generation so it doesn’t look that dense
 Show the value of chord on hover
 Have 2 dropdowns:
-Correlation metric (choice of performance/sts/embedding distance/ etc.)
+Correlation metric (sts/embedding distance/Accuracy etc.)
 Definition/PE/NE
 
 

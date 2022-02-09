@@ -442,8 +442,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
 
 
     const focusGroup_chord = (focus, selected) => {
-        console.log(focus);
-        console.log(selected);
+        // console.log(focus);
+        // console.log(selected);
         var svg;
         svg = d3.select(".chord-svg");
         svg.selectAll('.chord')
@@ -481,9 +481,9 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         .attr("stroke", (d) => {
             return d.index == selected ? 'black' : 'none';
         })
-        .attr("stroke-width", (d) => {
-            return d.index == selected ? '2' : '1';
-    });
+    //     .attr("stroke-width", (d) => {
+    //         return d.index == selected ? '2' : '1';
+    // });
 }
 
     const unfocusGroup_chord = (d) => {
