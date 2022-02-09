@@ -41,7 +41,7 @@ const Chord = (props) => {
                 }
             }
             
-            d3.select(svgRef.current).selectAll("*").remove();
+            d3.select(svgRef.current).selectAll("*").remove(); ///
 
             const index_task_id_map = {}
             const matrix = []

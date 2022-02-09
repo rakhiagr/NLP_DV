@@ -50,7 +50,7 @@ const NetworkGraph = (props) => {
 
         console.log('Min max: ', min, max);
 
-        var colorScale = d3.scaleSequential(d3.interpolateYlGnBu)
+        var colorScale = d3.scaleSequential(d3.interpolate("#F4D03F", "#884EA0"))
                             .domain([max-min/2, max]);
                             // .interpolator(d3.interpolatePuRd);
 
