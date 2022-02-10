@@ -181,26 +181,31 @@ const NetworkGraph = (props) => {
     },[props.taskNeighbours]);
 
     useEffect(() => {
+
+        
         if(selectedTaskDefinition !== '' && focusedTaskDefinition !== ''){
             setDescription(<Col xs={6} lg={6} xl={6} style={{ padding: 0 }}>
-                <br/><br/><br/>
-                <label> Selected Task : {selectedTaskID}</label>
+                <label><b> Selected Task : {selectedTaskID} </b></label>
                 <br/>
-                <textarea style={{width: '90%', height: '100px'}} value={selectedTaskDefinition} readOnly={true}>
-            </textarea>
+                <label style={{textAlign: 'justify', width: '80%'}}>
+                    {selectedTaskDefinition}
+                </label>
                 <br/><br/><br/>
-                <label> Focused Task : {focussedTaskID} <b> {focusedTaskDefinition.strength.toFixed(3)} </b>  ( Sentence Similarity Score ) </label>
+                <label style={{width: '80%'}}><b> Focused Task : {focussedTaskID} {focusedTaskDefinition.strength.toFixed(3)} </b>  ( Sentence Similarity Score ) </label>
                 <br/>
-                <textarea style={{width: '90%', height: '100px'}} value={focusedTaskDefinition.definition} readOnly={true}>
-            </textarea>
+                <br/>
+                <label style={{textAlign: 'justify', width: '80%'}}>
+                    {focusedTaskDefinition.definition}
+                </label>
             </Col>);
         }else if(selectedTaskDefinition !== '' && focusedTaskDefinition === ''){
             setDescription(<Col xs={6} lg={6} xl={6} style={{ padding: 0 }}>
-                <br/><br/><br/>
-                <label> Selected Task : {selectedTaskID}</label>
+                <label><b> Selected Task : {selectedTaskID} </b></label>
                 <br/>
-                <textarea style={{width: '90%', height: '100px'}} value={selectedTaskDefinition} readOnly={true}>
-            </textarea>
+                <br/>
+                <label style={{textAlign: 'justify', width: '80%'}}>
+                    {selectedTaskDefinition}
+                </label>
             </Col>);
         }
     }, [selectedTaskDefinition, focusedTaskDefinition])
