@@ -9,7 +9,7 @@ const NetworkGraph = (props) => {
 
     const [selectedTaskDefinition, setSelectedTaskDefinition] = useState('');
     const [focusedTaskDefinition, setFocusedTaskDefinition] = useState('');
-    const [selectedTaskID, setSelectedTaskID] = useState('Task 1');
+    const [selectedTaskID, setSelectedTaskID] = useState('1');
     const [focussedTaskID, setFocussedTaskID] = useState('');
     const [description, setDescription] = useState(<Col xs={6} lg={6} xl={6} style={{ padding: 0 }}></Col>);
 
@@ -18,7 +18,7 @@ const NetworkGraph = (props) => {
             fetch(`/definition/${props.task}`)
                 .then(response => response.json())
                 .then(result => {
-                    console.log('Result: ', result);
+                    // console.log('Result: ', result);
                     setSelectedTaskDefinition(result[0]['definition']);
                     setFocusedTaskDefinition('');
                 })
@@ -35,8 +35,8 @@ const NetworkGraph = (props) => {
         let threshold = sum * 0.6;
         let nodes = props.taskNeighbours.map(n => ({ 'id': Object.keys(n)[0], 'level': Object.keys(n)[0] === props.task ? 1 : 2,
     'similarity': Object.keys(n)[0] === props.task ? 1 : n[Object.keys(n)[0]]}));
-        console.log('Nodes: ', nodes);
-        console.log('Neighbours: ', props.taskNeighbours);
+        // console.log('Nodes: ', nodes);
+        // console.log('Neighbours: ', props.taskNeighbours);
 
         var neighbourSimilarity = new Array();
         for (let n of nodes) {
@@ -48,16 +48,16 @@ const NetworkGraph = (props) => {
                     neighbourSimilarity.push(obj);
                 })
         }
-        console.log('Neighbour similarity to each other', neighbourSimilarity);
+        // console.log('Neighbour similarity to each other', neighbourSimilarity);
 
         let neighbourList = props.taskNeighbours.filter(d => Object.keys(d)[0] != props.task);
-        console.log('Neighbour List: ', neighbourList);
+        // console.log('Neighbour List: ', neighbourList);
 
         let links = props.taskNeighbours.map(n => ({ 'target': props.task, 'source': Object.keys(n)[0], 'strength': n[Object.keys(n)[0]] }))
 
         // let neighbourLinks = neighbourSimilarity.map(n => )
 
-        console.log('Links: ', links);
+        // console.log('Links: ', links);
         let min = 1;
         let max = 0;
         for (let l of links) {
@@ -66,7 +66,7 @@ const NetworkGraph = (props) => {
             if(max < sim) max = sim;
         }
 
-        console.log('Min max: ', min, max);
+        // console.log('Min max: ', min, max);
 
         var colorScale = d3.scaleSequential(d3.interpolate('#A3E4D7', '#264653'))
                             .domain([min, max]);
@@ -79,9 +79,12 @@ const NetworkGraph = (props) => {
         });
         const neigh = (a, b) => a === b || adjlist[a + "-" + b];
 
-        console.log('Nodes are: ', nodes);
-        var selectedTask = nodes.filter(d => d['id'] === props.task);
-        console.log('Selected task: ', selectedTask);
+        // console.log('Nodes are: ', nodes);
+        var selectedTask = nodes.findIndex(d => d.id == props.task);
+        setSelectedTaskID((selectedTask + 1).toString());
+        // console.log('Selected task: ', selectedTask);
+        // console.log('Index: ', selectedTask['index']);
+        // console.log('TYpes: ', typeof(selectedTask), typeof(selectedTask[0]), Object.keys(selectedTask[0]));
         // setFocussedTaskID('Task ' + selectedTask[0].id.charAt(selectedTask[0].id.length-1));
 
         let simulation = d3.forceSimulation(nodes)
@@ -101,7 +104,7 @@ const NetworkGraph = (props) => {
           .attr("stroke-width", (d) => {return d.similarity == 0 ? 0 : 1})
           .attr("stroke", "black")
 
-        console.log('Data: ', nodes[0]);
+        // console.log('Data: ', nodes[0]);
 
         let nodeElements = svg.append("g")
           .attr("class", "nodes")
@@ -109,9 +112,8 @@ const NetworkGraph = (props) => {
           .data(nodes)
           .enter().append("circle")
             .attr("r", 10)
-            .attr("fill", function(d) {
-                console.log('sim: ', d.similarity);
-                return colorScale(d.similarity); })
+            .attr("fill", function(d, i) {
+                return props.colors[i];})
             .attr("node-type", (d) => {
                 return d.id === props.task ? 'selected' : 'neighbour';});
 
@@ -151,7 +153,7 @@ const NetworkGraph = (props) => {
                 return o.source.index === index || o.target.index === index ? 1 : 0.1;
             });
             var source_node = nodeElements.filter(function(d) {return d3.select(this).attr("node-type") == 'selected'}).nodes();
-            console.log('Source Node: ', source_node);
+            // console.log('Source Node: ', source_node);
             props.focusGroup('task_'+(index+1), 'task_'+(source_node[0].__data__.index+1));
             props.focusGroup_chord((index), (source_node[0].__data__.index));
         }
@@ -181,11 +183,10 @@ const NetworkGraph = (props) => {
     },[props.taskNeighbours]);
 
     useEffect(() => {
-
         
         if(selectedTaskDefinition !== '' && focusedTaskDefinition !== ''){
             setDescription(<Col xs={6} lg={6} xl={6} style={{ padding: 0 }}>
-                <label><b> Selected Task : {selectedTaskID} </b></label>
+                <label><b> Selected Task : Task {selectedTaskID} </b></label>
                 <br/>
                 <label style={{textAlign: 'justify', width: '80%'}}>
                     {selectedTaskDefinition}
@@ -200,7 +201,7 @@ const NetworkGraph = (props) => {
             </Col>);
         }else if(selectedTaskDefinition !== '' && focusedTaskDefinition === ''){
             setDescription(<Col xs={6} lg={6} xl={6} style={{ padding: 0 }}>
-                <label><b> Selected Task : {selectedTaskID} </b></label>
+                <label><b> Selected Task : Task {selectedTaskID} </b></label>
                 <br/>
                 <br/>
                 <label style={{textAlign: 'justify', width: '80%'}}>
