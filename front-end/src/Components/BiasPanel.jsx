@@ -292,6 +292,7 @@ const BiasPanel = (props) => {
                     tooltip.style.maxWidth = '200px';
                     tooltip.style.maxHeight = '100px';
                     tooltip.style.border = '1px solid black';
+                    console.log(d);
                     tooltip.innerText = d.value.toFixed(3) + " , "+d.instance_name;
                     d3.select(event.currentTarget).style("opacity", 0.8);
                 })
