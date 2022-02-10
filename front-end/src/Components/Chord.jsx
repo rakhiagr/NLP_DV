@@ -114,7 +114,7 @@ const Chord = (props) => {
                 .enter().append("path")
                 .attr("class", "chord")
                 .style("fill", function(d) { 
-                    console.log(d.source.index, colors[d.source.index]);
+                    // console.log(d.source.index, colors[d.source.index]);
                     return colors[d.source.index]; })
                 .style("opacity", opacityDefault)
                 .attr("d", ribbonPath).on("mouseover", (event, d) => {

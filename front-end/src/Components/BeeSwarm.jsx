@@ -22,7 +22,10 @@ const BeeSwarm = (props) => {
     },[props.task]);
 
     useEffect(() => {
-        console.log(props.colors);
+        var colors = props.colors;
+
+        console.log("colors", colors);
+        // console.log(colors);
         const svg = d3.select(svgRef.current);
         svg.selectAll('*').remove();
         svg.attr("class", "beeswarm-svg");
@@ -31,7 +34,7 @@ const BeeSwarm = (props) => {
             let xScale = d3.scaleOrdinal().domain(sectors).range(xCoords);
             let width = svg.style("width");
             let height = svgRef.current.clientHeight;
-            console.log('Width and height are: ', width, height);
+            // console.log('Width and height are: ', width, height);
 
             let yScale = d3
                 .scaleLinear()
@@ -47,17 +50,22 @@ const BeeSwarm = (props) => {
         .scale(xScale)
         .tickPadding(5);
         let selectedTaskId = data.filter(d => d['_id'] === props.task);
-        console.log('Selected task id: '. selectedTaskId);
+        // console.log('Selected task id: '. selectedTaskId);
     const xAxisG = svg.append('g')
         .style("font-size", `1rem`)
         .attr('transform', `translate(0, ${svgRef.current.clientHeight-65})`);
+
         svg
             .selectAll(".circ")
             .data(data)
             .enter()
             .append("circle")
             .attr("class", "circ")
-            .attr("fill", (d) => d3.interpolate('#A3E4D7', '#264653')(d.accuracy))
+            .style("fill", function(d) { 
+                var x = d.id;
+                console.log("x: ", x)
+                return colors[d.id.slice(5)-1]; 
+            })
             .attr("r", (d) => size(d["accuracy"]))
             .attr("cx", (d) => xScale(d.id))
             .attr("cy", (d) => yScale(d.accuracy))
