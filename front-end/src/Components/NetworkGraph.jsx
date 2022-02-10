@@ -144,7 +144,8 @@ const NetworkGraph = (props) => {
 
             var index = d3.select(event.target).datum().index;
             nodeElements.style("opacity", function(o) {
-                return neigh(index, o.index) ? 1 : 0.1;
+                if (o.id == props.task) {return 0.8;}
+                return neigh(index, o.index) ? 1 : 0.3;
             });
             linkElements.style("opacity", function(o) {
                 return o.source.index === index || o.target.index === index ? 1 : 0.1;
@@ -159,6 +160,7 @@ const NetworkGraph = (props) => {
            linkElements.style("opacity", 1);
            props.unfocusGroup();
            props.unfocusGroup_chord();
+           setFocusedTaskDefinition('');
         }
 
         nodeElements.on("mouseover", focus).on("mouseout", unfocus);

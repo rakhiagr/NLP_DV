@@ -71,16 +71,16 @@ const PanelLayout = () => {
     );
 
     const [taskColors, setTaskColors] = useState({
-        t1 : "#001219",
-        t2 : "#005F73",
-        t3 : "#0A9396",
-        t4 : "#94D2BD",
-        t5 : "#E9D8A6",
-        t6 : "#EE9B00",
-        t7 : "#CA6702",
-        t8 : "#BB3E03",
-        t9 : "#AE2012",
-        t10 : "#9B2226"
+        1 : "#001219",
+        2 : "#005F73",
+        3 : "#0A9396",
+        4 : "#94D2BD",
+        5 : "#E9D8A6",
+        6 : "#EE9B00",
+        7 : "#CA6702",
+        8 : "#BB3E03",
+        9 : "#AE2012",
+        10 : "#9B2226"
     })
 
     const [sphereSelectOptions, setSphereSelectOptions] = useState([
@@ -495,9 +495,9 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         .attr("stroke", (d) => {
             return d.index == selected ? 'black' : 'none';
         })
-    //     .attr("stroke-width", (d) => {
-    //         return d.index == selected ? '2' : '1';
-    // });
+        .attr("stroke-width", (d) => {
+            return d.index == selected ? '2' : '1';
+    });
 }
 
     const unfocusGroup_chord = (d) => {
