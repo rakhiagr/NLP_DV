@@ -24,7 +24,7 @@ const BeeSwarm = (props) => {
     useEffect(() => {
         var colors = props.colors;
 
-        console.log("colors", colors);
+        // console.log("colors", colors);
         // console.log(colors);
         const svg = d3.select(svgRef.current);
         svg.selectAll('*').remove();
@@ -62,8 +62,8 @@ const BeeSwarm = (props) => {
             .append("circle")
             .attr("class", "circ")
             .style("fill", function(d) { 
-                var x = d.id;
-                console.log("x: ", x)
+                // var x = d.id;
+                // console.log("x: ", x)
                 return colors[d.id.slice(5)-1]; 
             })
             .attr("r", (d) => size(d["accuracy"]))

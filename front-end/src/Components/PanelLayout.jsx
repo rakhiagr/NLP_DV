@@ -454,10 +454,45 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         svg.selectAll('.circ').style("opacity", '1').attr("stroke", 'none');
     }
 
+    const focusGroup_bias = (focus, selected) => {
+        var svg;
+        svg = d3.select(".bias-svg");
+        // console.log(svg);
+        // console.log("focus, selected", focus, selected);
+        svg.selectAll('.bar')
+        .style("opacity", (d) => {
+            // console.log(d);
+            if(d.key == focus) {
+                console.log(d.key);
+                return 1;
+            }
+            if(d.key == selected) {
+                console.log(d.key);
+                return 0.6;
+            }
+            else {
+                return 0.2;
+            }
+        })
+        .attr("stroke", (d) => {
+            console.log(d.key, selected);
+            return d.key == selected ? 'black' : 'none';
+        })
+        .attr("stroke-width", (d) => {
+            console.log(d.key, selected);
+            return d.key == selected ? '2' : '1';
+        })
+        
+}
+
+    const unfocusGroup_bias = (d) => {
+        var svg;
+        svg = d3.select(".bias-svg");
+        svg.selectAll('.bar').style("opacity", '1').attr("stroke", 'none');
+    }
+
 
     const focusGroup_chord = (focus, selected) => {
-        // console.log(focus);
-        // console.log(selected);
         var svg;
         svg = d3.select(".chord-svg");
         svg.selectAll('.chord')
@@ -481,7 +516,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         })
 
         svg.selectAll('.group').style("opacity", (d) => {
-            console.log(d);
+            // console.log(d);
             if(d.index == focus) {
                 return 1;
             }
@@ -706,7 +741,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
-                        <NetworkGraph taskNeighbours={taskNeighbours} task={task} toggleLoading={setNetWorkLoading} 
+                        <NetworkGraph taskNeighbours={taskNeighbours} task={task} toggleLoading={setNetWorkLoading}
+                            focusGroup_bias={focusGroup_bias} unfocusGroup_bias={unfocusGroup_bias} 
                             focusGroup_chord={focusGroup_chord} unfocusGroup_chord={unfocusGroup_chord}
                             focusGroup={focusGroup} unfocusGroup={unfocusGroup} colors={taskColors}/>
                         </Col>

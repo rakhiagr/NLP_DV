@@ -83,7 +83,7 @@ const BiasPanel = (props) => {
     },[props.task, props.biasSelectedOption, props.biasRefresh]);
     useEffect(() => {
         if(data.length !== 0){
-            const svg = select(svgRef.current);
+            const svg = select(svgRef.current).attr("class", "bias-svg");
             svg.selectAll("*").remove();
             const xScale = scaleBand().domain(data.map(d =>  d.key)).range([40,svgRef.current.clientWidth-50]).padding(0.25);
             const xAxis = axisBottom(xScale).ticks(data.length);
@@ -133,14 +133,15 @@ const BiasPanel = (props) => {
                 })
                 .transition()
                 .attr("fill",(d,i) => colors[i])
-                .style("stroke", (d,i) => {
-                    if(d.task_id === props.task){
-                        return "black";
-                    }else{
-                        return "none";
-                    }
-                })
-                .style("stroke-width", "3")
+                // .style("stroke", (d,i) => {
+                //     if(d.task_id === props.task){
+                //         return "black";
+                //     }else{
+                //         return "none";
+                //     }
+                // })
+                // .style("stroke", "black")
+                // .style("stroke-width", "1")
                 .attr("height",(d) => svgRef.current.clientHeight-20-yScale(d.value));
             props.toggleLoading(false);
         }

@@ -156,12 +156,14 @@ const NetworkGraph = (props) => {
             // console.log('Source Node: ', source_node);
             props.focusGroup('task_'+(index+1), 'task_'+(source_node[0].__data__.index+1));
             props.focusGroup_chord((index), (source_node[0].__data__.index));
+            props.focusGroup_bias('task_'+(index+1), 'task_'+(source_node[0].__data__.index+1));
         }
         const unfocus = () => {
            nodeElements.style("opacity", 1);
            linkElements.style("opacity", 1);
            props.unfocusGroup();
            props.unfocusGroup_chord();
+           props.unfocusGroup_bias();
            setFocusedTaskDefinition('');
         }
 
