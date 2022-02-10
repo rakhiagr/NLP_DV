@@ -71,16 +71,16 @@ const PanelLayout = () => {
     );
 
     const [taskColors, setTaskColors] = useState({
-        1 : "#001219",
+        1 : "#F94144",
         2 : "#005F73",
         3 : "#0A9396",
         4 : "#94D2BD",
-        5 : "#E9D8A6",
+        5 : "#C1B75F",
         6 : "#EE9B00",
-        7 : "#CA6702",
-        8 : "#BB3E03",
-        9 : "#AE2012",
-        0 : "#9B2226"
+        7 : "#6B705C",
+        8 : "#B5838D",
+        9 : "#118AB2",
+        0 : "#F76F8E"
     })
 
     const [sphereSelectOptions, setSphereSelectOptions] = useState([

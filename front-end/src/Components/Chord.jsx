@@ -72,7 +72,7 @@ const Chord = (props) => {
                 .datum(chord(matrix));
 
             var colors = props.colors;
-            console.log(colors);
+            // console.log(colors);
 
             const outerCircle = svg.selectAll("g.group")
                 .data(function(chords) { return chords.groups; })
@@ -88,8 +88,6 @@ const Chord = (props) => {
 
         var path = outerCircle.append("path")
                 .style("fill", function(d) {
-
-                    console.log(d, colors[d.index]);
                     return colors[d.index]; })
                 .attr("id", function(d, i) { return "group" + d.index; })
                 .attr("d", arc);
@@ -115,9 +113,8 @@ const Chord = (props) => {
                 .data(function(chords) { return chords; })
                 .enter().append("path")
                 .attr("class", "chord")
-                // .style("fill", colors[d.source.index])
                 .style("fill", function(d) { 
-                    console.log(d.source.index, colors[d.source.index+1]);
+                    console.log(d.source.index, colors[d.source.index]);
                     return colors[d.source.index]; })
                 .style("opacity", opacityDefault)
                 .attr("d", ribbonPath).on("mouseover", (event, d) => {

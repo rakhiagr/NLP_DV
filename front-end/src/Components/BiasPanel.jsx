@@ -99,7 +99,8 @@ const BiasPanel = (props) => {
                 .style("transform", `translateX(${40}px)`)
                 .style("font-size", `1rem`)
                 .call(yAxis);
-            let colourScale = scaleSequential().domain([-yMax, yMax]).interpolator(interpolateBuPu);
+            // let colourScale = scaleSequential().domain([-yMax, yMax]).interpolator(interpolateBuPu);
+            var colors = props.colors;
             svg.selectAll(".bar")
                 .data(data)
                 .join("rect")
@@ -131,7 +132,7 @@ const BiasPanel = (props) => {
                     d3.select(event.currentTarget).style("opacity", 1);
                 })
                 .transition()
-                .attr("fill",(d) => colourScale(d.value))
+                .attr("fill",(d,i) => colors[i])
                 .style("stroke", (d,i) => {
                     if(d.task_id === props.task){
                         return "black";
