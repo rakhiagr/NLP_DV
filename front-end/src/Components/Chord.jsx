@@ -88,8 +88,9 @@ const Chord = (props) => {
 
         var path = outerCircle.append("path")
                 .style("fill", function(d) {
-                    console.log(d.index, colors[d.index+1]);
-                    return colors[d.index+1]; })
+
+                    console.log(d, colors[d.index]);
+                    return colors[d.index]; })
                 .attr("id", function(d, i) { return "group" + d.index; })
                 .attr("d", arc);
 
@@ -117,7 +118,7 @@ const Chord = (props) => {
                 // .style("fill", colors[d.source.index])
                 .style("fill", function(d) { 
                     console.log(d.source.index, colors[d.source.index+1]);
-                    return colors[d.source.index+1]; })
+                    return colors[d.source.index]; })
                 .style("opacity", opacityDefault)
                 .attr("d", ribbonPath).on("mouseover", (event, d) => {
                     let x = event.x,
