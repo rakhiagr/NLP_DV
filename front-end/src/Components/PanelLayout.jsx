@@ -455,19 +455,18 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
     }
 
     const focusGroup_bias = (focus, selected) => {
-        var svg;
-        svg = d3.select(".bias-svg");
-        // console.log(svg);
-        // console.log("focus, selected", focus, selected);
-        svg.selectAll('.bar')
+        var svg_bar, svg_heatmap;
+        svg_bar = d3.select(".bias-svg");
+        svg_heatmap = d3.select(".heatmap-svg");
+        svg_bar.selectAll('.bar')
         .style("opacity", (d) => {
             // console.log(d);
             if(d.key == focus) {
-                console.log(d.key);
+                // console.log(d.key);
                 return 1;
             }
             if(d.key == selected) {
-                console.log(d.key);
+                // console.log(d.key);
                 return 0.6;
             }
             else {
@@ -482,13 +481,16 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
             console.log(d.key, selected);
             return d.key == selected ? '2' : '1';
         })
-        
+        svg_heatmap.selectAll('.rect')
+        .style("opacity", (d) => {
+            console.log(d);
+        });
 }
 
     const unfocusGroup_bias = (d) => {
-        var svg;
-        svg = d3.select(".bias-svg");
-        svg.selectAll('.bar').style("opacity", '1').attr("stroke", 'none');
+        var svg_bar;
+        svg_bar = d3.select(".bias-svg");
+        svg_bar.selectAll('.bar').style("opacity", '1').attr("stroke", 'none');
     }
 
 
@@ -533,6 +535,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         .attr("stroke-width", (d) => {
             return d.index == selected ? '2' : '1';
     });
+    // console.log("HI");
 }
 
     const unfocusGroup_chord = (d) => {

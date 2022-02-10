@@ -306,7 +306,7 @@ const BiasPanel = (props) => {
     },[boxPlotData]);
     useEffect(() => {
         if(heatMapData.length !== 0){
-            const svg = select(svgRef.current);
+            const svg = select(svgRef.current).attr("class", "heatmap-svg");;
             svg.selectAll("*").remove();
 
             const xScale = scaleBand().domain(heatMapData.map(d =>  d.group)).range([75,svgRef.current.clientWidth-50]).padding(0.05);
@@ -326,7 +326,7 @@ const BiasPanel = (props) => {
                 .call(yAxis);
 
             var myColor = d3.scaleSequential()
-                .interpolator(d3.interpolateInferno)
+                .interpolator(d3.interpolatePuRd)
                 .domain([1,100])
 
             svg.selectAll()
@@ -340,8 +340,8 @@ const BiasPanel = (props) => {
                 .attr("width", xScale.bandwidth() )
                 .attr("height", yScale.bandwidth() )
                 .style("fill", function(d) { return myColor(d.value*100)} )
-                .style("stroke-width", 4)
-                .style("stroke", "none")
+                .style("stroke-width", 1)
+                .style("stroke", "#7C7E7E")
                 .on("mouseover", (event, d) => {
                     let x = event.x,
                         y = event.y,
