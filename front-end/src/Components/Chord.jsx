@@ -54,8 +54,8 @@ const Chord = (props) => {
 
             const outerRadius = (svgRef.current.clientWidth/2) - 170;
             const innerRadius = outerRadius - 35;
-            const color = d3.scaleSequential().domain([0,matrix.length])
-                .interpolator(d3.interpolate('#A3E4D7', '#264653'));
+            // const color = d3.scaleSequential().domain([0,matrix.length])
+            //     .interpolator(d3.interpolate('#A3E4D7', '#264653'));
             const opacityDefault = 0.8;
 
             const chord = d3.chord()
@@ -71,6 +71,9 @@ const Chord = (props) => {
                 .attr("transform", `translate(${svgRef.current.clientWidth/2},${svgRef.current.clientHeight/2})`)
                 .datum(chord(matrix));
 
+            var colors = props.colors;
+            console.log(colors);
+
             const outerCircle = svg.selectAll("g.group")
                 .data(function(chords) { return chords.groups; })
                 .enter().append("g")
@@ -84,7 +87,9 @@ const Chord = (props) => {
                 .on("mouseout", mouseoutChord);
 
         var path = outerCircle.append("path")
-                .style("fill", function(d) { return color(d.index); })
+                .style("fill", function(d) {
+                    console.log(d.index, colors[d.index+1]);
+                    return colors[d.index+1]; })
                 .attr("id", function(d, i) { return "group" + d.index; })
                 .attr("d", arc);
 
@@ -102,14 +107,17 @@ const Chord = (props) => {
               return (25-(50 *outerRadius)/length+(50 *innerRadius)/length) + "%";
             })
             .text(function(d) {
-              return "t_" + (d.index+1);
-            }).style("font-size", "15px").style("fill", "#273746").style("font-weight", "500");
+              return "T-" + (d.index+1);
+            }).style("font-size", "15px").style("fill", "white").style("font-weight", "500");
 
             svg.selectAll("path.chord")
                 .data(function(chords) { return chords; })
                 .enter().append("path")
                 .attr("class", "chord")
-                .style("fill", function(d) { return color(d.source.index); })
+                // .style("fill", colors[d.source.index])
+                .style("fill", function(d) { 
+                    console.log(d.source.index, colors[d.source.index+1]);
+                    return colors[d.source.index+1]; })
                 .style("opacity", opacityDefault)
                 .attr("d", ribbonPath).on("mouseover", (event, d) => {
                     let x = event.x,
