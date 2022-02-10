@@ -69,6 +69,20 @@ const PanelLayout = () => {
             { value: 't11', label: 'Word Overlap' },
         ]
     );
+
+    const [taskColors, setTaskColors] = useState({
+        t1 : "#001219",
+        t2 : "#005F73",
+        t3 : "#0A9396",
+        t4 : "#94D2BD",
+        t5 : "#E9D8A6",
+        t6 : "#EE9B00",
+        t7 : "#CA6702",
+        t8 : "#BB3E03",
+        t9 : "#AE2012",
+        t10 : "#9B2226"
+    })
+
     const [sphereSelectOptions, setSphereSelectOptions] = useState([
             { value: 'Category', label: 'Category' },
             { value: 'Source', label: 'Source' },
@@ -622,7 +636,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh', overflowX: 'scroll' }}>
-                            <BeeSwarm taskNeighbours={taskNeighbours} task={task} toggleLoading={setBeeSwarmloading} />
+                            <BeeSwarm taskNeighbours={taskNeighbours} task={task} toggleLoading={setBeeSwarmloading} colors={taskColors}/>
                         </Col>
                     </Row>
                 </Col>
@@ -660,7 +674,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
-                            <Chord taskNeighbours={taskNeighbours} task={task} toggleLoading={setChordloading} />
+                            <Chord taskNeighbours={taskNeighbours} task={task} toggleLoading={setChordloading} colors={taskColors}/>
                         </Col>
                     </Row>
                 </Col>
@@ -694,7 +708,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
                         <NetworkGraph taskNeighbours={taskNeighbours} task={task} toggleLoading={setNetWorkLoading} 
                             focusGroup_chord={focusGroup_chord} unfocusGroup_chord={unfocusGroup_chord}
-                            focusGroup={focusGroup} unfocusGroup={unfocusGroup}/>
+                            focusGroup={focusGroup} unfocusGroup={unfocusGroup} colors={taskColors}/>
                         </Col>
                     </Row>
                 </Col>
@@ -739,7 +753,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
-                            <BiasPanel biasRefresh={biasRefresh} toggleRefresh={setBiasRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} />
+                            <BiasPanel biasRefresh={biasRefresh} toggleRefresh={setBiasRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/>
                         </Col>
                     </Row>
                 </Col>

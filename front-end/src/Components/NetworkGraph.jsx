@@ -34,10 +34,28 @@ const NetworkGraph = (props) => {
         }
         let threshold = sum * 0.6;
         let nodes = props.taskNeighbours.map(n => ({ 'id': Object.keys(n)[0], 'level': Object.keys(n)[0] === props.task ? 1 : 2,
-    'similarity': n[Object.keys(n)[0]]}));
+    'similarity': Object.keys(n)[0] === props.task ? 1 : n[Object.keys(n)[0]]}));
         console.log('Nodes: ', nodes);
         console.log('Neighbours: ', props.taskNeighbours);
+
+        var neighbourSimilarity = new Array();
+        for (let n of nodes) {
+            fetch(`/neighbours/${n.id}`)
+                .then(response => response.json())
+                .then(result => {
+                    var obj = {};
+                    obj[n.id] = result[Object.keys(result)[0]]['neighbours'];
+                    neighbourSimilarity.push(obj);
+                })
+        }
+        console.log('Neighbour similarity to each other', neighbourSimilarity);
+
+        let neighbourList = props.taskNeighbours.filter(d => Object.keys(d)[0] != props.task);
+        console.log('Neighbour List: ', neighbourList);
+
         let links = props.taskNeighbours.map(n => ({ 'target': props.task, 'source': Object.keys(n)[0], 'strength': n[Object.keys(n)[0]] }))
+
+        // let neighbourLinks = neighbourSimilarity.map(n => )
 
         console.log('Links: ', links);
         let min = 1;
@@ -50,8 +68,8 @@ const NetworkGraph = (props) => {
 
         console.log('Min max: ', min, max);
 
-        var colorScale = d3.scaleSequential(d3.interpolate("#F4D03F", "#884EA0"))
-                            .domain([max-min/2, max]);
+        var colorScale = d3.scaleSequential(d3.interpolate('#A3E4D7', '#264653'))
+                            .domain([min, max]);
                             // .interpolator(d3.interpolatePuRd);
 
         let adjlist = [];
@@ -73,13 +91,14 @@ const NetworkGraph = (props) => {
                              .force("y", d3.forceY(svgRef.current.clientHeight / 2).strength(1))
                              .force("link", d3.forceLink(links).id(function(d) {return d.id; }).distance(function (link) { return link.strength*300 }).strength(1));
 
+
         let linkElements = svg.append("g")
           .attr("class", "links")
           .selectAll("line")
           .data(links)
           .enter()
           .append("line")
-          .attr("stroke-width", (d) => {console.log('Similarity values: ', d.similarity == 0 ? 0 : 1); return d.similarity == 0 ? 0 : 1})
+          .attr("stroke-width", (d) => {return d.similarity == 0 ? 0 : 1})
           .attr("stroke", "black")
 
         console.log('Data: ', nodes[0]);
@@ -96,6 +115,22 @@ const NetworkGraph = (props) => {
             .attr("node-type", (d) => {
                 return d.id === props.task ? 'selected' : 'neighbour';});
 
+        // var neighbourSimilarityFiltered;
+        // neighbourSimilarityFiltered = neighbourSimilarity.filter(d => {
+        //     var res = [];
+        //     d[Object.keys(d)[0]].forEach( n => props.taskNeighbours.includes(Object.keys(n)[0]) ? res.push(Object.keys(n)[0]) : 0;
+        // });
+
+        // neighbourSimilarityFiltered = neighbourSimilarity.map((d) => {
+        //     return d[Object.keys(d)[0]].filter(n => props.taskNeighbours.includes(Object.keys(n)[0]))
+        // });
+
+        // neighbourSimilarityFiltered = neighbourSimilarity.forEach( (d) => {
+        //     console.log('d is: ', d);
+        //     return d[Object.keys(d)[0]].filter( (n) => {if(props.taskNeighbours.includes(n)){ console.log('In if: '); return n;}});
+        // }
+        // );
+        
         const focus = (event, d) => {
             fetch(`/definition/${d.id}`)
                 .then(response => response.json())
