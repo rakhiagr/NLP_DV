@@ -80,7 +80,7 @@ const PanelLayout = () => {
         7 : "#CA6702",
         8 : "#BB3E03",
         9 : "#AE2012",
-        10 : "#9B2226"
+        0 : "#9B2226"
     })
 
     const [sphereSelectOptions, setSphereSelectOptions] = useState([
