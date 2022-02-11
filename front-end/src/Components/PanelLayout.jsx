@@ -126,8 +126,11 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         setBiasSelectedOption(event.value);
     }
 
-    const handleChordSelectChange = (event) => {
+    const handleChordSelectChange1 = (event) => {
         setChordSelectedOption(event.value);
+    }
+
+    const handleChordSelectChange2 = (event) => {
         setChordSelectedOption2(event.value);
     }
 
@@ -690,12 +693,12 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                         <Col xs={6} lg={6} xl={6} style={{ paddingTop : '10px' }}>
                             <Select style={{width: '150px' }}
                                     value={chordSelectOptions.filter(option => option.value === chordSelectedOption)}
-                                    styles={customStyles} options={chordSelectOptions} onChange={(event) => handleChordSelectChange(event)}  />
+                                    styles={customStyles} options={chordSelectOptions} onChange={(event) => handleChordSelectChange1(event)}  />
                         </Col>
                         <Col xs={6} lg={6} xl={6} style={{ paddingTop : '10px' }}>
                             <Select style={{width: '50px' }}
                                     value={chordSelectOptions2.filter(option => option.value === chordSelectedOption2)}
-                                    styles={customStyles} options={chordSelectOptions2} onChange={(event) => handleChordSelectChange(event)}  />
+                                    styles={customStyles} options={chordSelectOptions2} onChange={(event) => handleChordSelectChange2(event)}  />
                         </Col>
                         {/* <Col xs={1} lg={1} xl={1} style={{ paddingTop: '10px' }}>
                             <Button variant="light" style={{ padding: 0, opacity: chordOpacity }}
