@@ -2,7 +2,7 @@ from os import listdir
 from os.path import isfile, join
 
 # Add the path to your data to the mypath variable
-mypath = r"F:\Code\DV\Project\NLP_DV\tasks\tasks"
+mypath = r"E:\CSE578\natural-instructions-expansion\tasks"
 onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
 # print(onlyfiles)

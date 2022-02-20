@@ -59,12 +59,12 @@ const PanelLayout = () => {
             { value: 't1', label: 'Unique Vocabulary' },
             { value: 't2', label: 'Sentence Lengths' },
             { value: 't3', label: 'Word Frequency' },
-            { value: 't4', label: 'Number of Adjectives' },
-            { value: 't5', label: 'Number of Adverbs' },
-            { value: 't6', label: 'Number of Verbs' },
-            { value: 't7', label: 'Number of Nouns' },
-            { value: 't8', label: 'Number of Bigrams' },
-            { value: 't9', label: 'Number of Trigrams' },
+            { value: 't4', label: 'Adjectives' },
+            { value: 't5', label: 'Adverbs' },
+            { value: 't6', label: 'Verbs' },
+            { value: 't7', label: 'Nouns' },
+            { value: 't8', label: 'Bigrams' },
+            { value: 't9', label: 'Trigrams' },
             { value: 't10', label: 'Examples Correlation' },
             { value: 't11', label: 'Word Overlap' },
         ]
@@ -217,6 +217,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     point.updateMatrix();
                     scene.add(point);
                     domEvents.addEventListener(point, 'mouseover', (event) => {
+                        let spherePointHovered = new CustomEvent('spherePointHovered', {detail: point});
+                        document.dispatchEvent(spherePointHovered);
                         if(event.target.material === blurMaterial || event.target.material === clickMaterial || event.target.material === focusMaterial ){
                             neighbours = [];
                         }
@@ -253,6 +255,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                         }
                     }, false)
                     domEvents.addEventListener(point, 'mouseout', (event) => {
+                        let spherePointUnhovered = new CustomEvent('spherePointUnHovered', {detail: point});
+                        document.dispatchEvent(spherePointUnhovered);
                         setTimeout(function (){
                             event.target.material.size = 5
                             for ( let i = 0; i < embeddings.length; i ++ ) {

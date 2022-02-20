@@ -24,6 +24,7 @@ const Chord = (props) => {
     
     useEffect(() => {
         if(data.length !== 0 ){
+            console.log(data);
             const category_mapper = {};
             for ( let i = 0; i < embeddings.length; i ++ ) {
                 if(props.taskNeighbours.map(d => Object.keys(d)[0]).includes(embeddings[i].id)){
@@ -44,6 +45,7 @@ const Chord = (props) => {
             d3.select(svgRef.current).selectAll("*").remove(); ///
 
             const index_task_id_map = {}
+            const reverse_index_task_id_map = {}
             const matrix = []
             let count = 0;
             for(const key in data){
@@ -85,6 +87,10 @@ const Chord = (props) => {
                 })
                 .on("mouseout", fade(opacityDefault, false))
                 .on("mouseout", mouseoutChord);
+
+                document.addEventListener('spherePointHovered', fade_sphere(0.1,reverse_index_task_id_map), false);
+
+                document.addEventListener('spherePointUnHovered', fade_sphere(opacityDefault,{}), false);
 
         var path = outerCircle.append("path")
                 .style("fill", function(d) {
@@ -164,7 +170,7 @@ const Chord = (props) => {
                             tooltip.style.border = '1px solid black';
                             //console.log(category_mapper[Object.keys(props.taskNeighbours[d.index])]);
                             tooltip.innerText = category_mapper[Object.keys(props.taskNeighbours[d.index])];
-                            d3.select(event.currentTarget).style("opacity", 0.8);
+                            // d3.select(event.currentTarget).style("opacity", 0.8);
                         }
                         else{
                             document.getElementById('sphere-tooltip').style.display = 'none';
@@ -173,6 +179,26 @@ const Chord = (props) => {
                         
                 };
             }
+
+            function fade_sphere(opacity, reverse_index_task_id_map) {
+                return function(event,d) {
+                    if(d === undefined){
+                        d = {index : reverse_index_task_id_map[event.detail.userData.data.id]}
+                    }
+                    if(d.index !== undefined){
+                        svg.selectAll("path.chord")
+                            .filter(function(data) { return data.source.index !== d.index && data.target.index !== d.index; })
+                            .transition()
+                            .style("opacity", opacity);
+                    }else if(opacity === opacityDefault){
+                        svg.selectAll("path.chord")
+                            .filter(function(data) { return data.source.index !== 100 && data.target.index !== 100; })
+                            .transition()
+                            .style("opacity", opacity);
+                    }
+                }
+            }
+
             function mouseoverChord(event,d,i) {
                 svg.selectAll("path.chord")
                     .transition()

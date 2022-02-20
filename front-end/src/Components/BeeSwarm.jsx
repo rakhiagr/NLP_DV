@@ -16,13 +16,13 @@ const BeeSwarm = (props) => {
                 .then(result => {
                     props.toggleLoading(false);
                     setData(result);
-                });
-          
+                });    
         }
     },[props.task]);
 
     useEffect(() => {
         if(data != null){
+            console.log("Beeswarm", data);
             var colors = props.colors;
             const svg = d3.select(svgRef.current);
             svg.selectAll('*').remove();

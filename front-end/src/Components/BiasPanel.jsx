@@ -143,6 +143,18 @@ const BiasPanel = (props) => {
                 // .style("stroke", "black")
                 // .style("stroke-width", "1")
                 .attr("height",(d) => svgRef.current.clientHeight-20-yScale(d.value));
+                document.addEventListener('spherePointHovered', (event) =>{
+                    svg.selectAll(".bar")
+                        .filter(function(data) { return data.task_id !== event.detail.userData.data.id; })
+                        .transition()
+                        .style("opacity", 0.1);
+                }, false);
+    
+                document.addEventListener('spherePointUnHovered', () =>{
+                    svg.selectAll(".bar")
+                        .transition()
+                        .style("opacity", 1);
+                }, false);
             props.toggleLoading(false);
         }
     },[data]);
@@ -293,7 +305,6 @@ const BiasPanel = (props) => {
                     tooltip.style.maxWidth = '200px';
                     tooltip.style.maxHeight = '100px';
                     tooltip.style.border = '1px solid black';
-                    console.log(d);
                     tooltip.innerText = d.value.toFixed(3) + " , "+d.instance_name;
                     d3.select(event.currentTarget).style("opacity", 0.8);
                 })
