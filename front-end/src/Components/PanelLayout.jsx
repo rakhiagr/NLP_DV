@@ -56,19 +56,19 @@ const PanelLayout = () => {
     const [modelSelectOptions, setModelSelectOptions] = useState([{value: 'GPT', label: 'GPT'}, {value: 'LSTM', label: 'LSTM'}]);
 
     const [biasSelectOptions, setBiasSelectOptions] = useState([
-            { value: 't1', label: 'Unique Vocabulary' },
-            { value: 't2', label: 'Sentence Lengths' },
-            { value: 't3', label: 'Word Frequency' },
-            { value: 't4', label: 'Adjectives' },
-            { value: 't5', label: 'Adverbs' },
-            { value: 't6', label: 'Verbs' },
-            { value: 't7', label: 'Nouns' },
-            { value: 't8', label: 'Bigrams' },
-            { value: 't9', label: 'Trigrams' },
-            { value: 't10', label: 'Examples Correlation' },
-            { value: 't11', label: 'Word Overlap' },
-        ]
-    );
+        { value: 't1', label: 'Unique Vocabulary' },
+        { value: 't2', label: 'Sentence Lengths' },
+        { value: 't3', label: 'Word Frequency' },
+        { value: 't4', label: 'Number of Adjectives' },
+        { value: 't5', label: 'Number of Adverbs' },
+        { value: 't6', label: 'Number of Verbs' },
+        { value: 't7', label: 'Number of Nouns' },
+        { value: 't8', label: 'Number of Bigrams' },
+        { value: 't9', label: 'Number of Trigrams' },
+        { value: 't10', label: 'Examples Correlation' },
+        { value: 't11', label: 'Word Overlap' },
+    ]
+);
 
     const [taskColors, setTaskColors] = useState({
         1 : "#F94144",
