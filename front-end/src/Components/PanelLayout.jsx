@@ -113,8 +113,10 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         //     body: JSON.stringify({instance: instance})
         // });
         setShow(false);
-        // setBiasRefresh(true);
+        
         setPanelRefresh(true);
+        // setBiasRefresh(true);
+        setBiasLoading(true);
         // <Chord taskNeighbours={taskNeighbours} task={task} toggleLoading={setChordloading} colors={taskColors}/>
     };
 
@@ -684,7 +686,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh', overflowX: 'scroll' }}>
-                            <BeeSwarm panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} taskNeighbours={taskNeighbours} task={task} toggleLoading={setBeeSwarmloading} colors={taskColors}/>
+                            <BeeSwarm panelRefresh={panelRefresh} taskNeighbours={taskNeighbours} task={task} toggleLoading={setBeeSwarmloading} colors={taskColors}/>
                             {/* <BiasPanel panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/> */}
                         </Col>
                     </Row>

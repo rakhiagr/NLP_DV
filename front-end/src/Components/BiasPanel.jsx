@@ -11,8 +11,11 @@ const BiasPanel = (props) => {
     const [heatMapData, setHeatMapData] = useState([]);
 
     useEffect(() => {
+        // console.log("Panel refresh ", props.panelRefresh);
+        // console.log("props: ", props);
         // if(props.task !== '' && (props.biasSelectedOption === 't10' || props.biasRefresh)){
-        if(props.task !== '' && (props.biasSelectedOption === 't10' || props.panelRefresh)){
+        if(props.task !== '' &&  props.biasSelectedOption === 't10'){
+            
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
@@ -51,7 +54,7 @@ const BiasPanel = (props) => {
                         'negative': new_data2, 'negative_max' : max_y_value2, 'negative_min': min_y_value2 })
                 });
         }
-        else if(props.task !== '' && ( props.biasSelectedOption === 't11'  || props.panelRefresh)){
+        else if(props.task !== '' &&  props.biasSelectedOption === 't11'  ){
             props.toggleLoading(true);
             fetch(`/heatmap/${props.task}`)
                 .then(response => response.json())
@@ -59,7 +62,8 @@ const BiasPanel = (props) => {
                     setHeatMapData(data);
                 });
         }
-        else if(props.task !== '' && ( props.biasSelectedOption !== 't10'  || props.panelRefresh)){
+        else if(props.task !== '' &&  props.biasSelectedOption !== 't10'){
+            // console.log("Panel refresh ", props.panelRefresh);
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
@@ -77,9 +81,23 @@ const BiasPanel = (props) => {
                         new_data.push(item);
                     }
                     setYMax(max_y_value);
-                    setData(new_data);
+                    if(props.panelRefresh){
+                        for(var i = 0; i < 10; i++){
+                            if(new_data[i]['task_id'] == props.task)
+                                new_data[i]['value'] = new_data[i]['value'] + 5;
+                        }
+                        console.log("New data: ", new_data);
+                        setData(new_data);
+                        // console.log("Bias refreshed data: ", data);
+                    }
+                    else{
+                        console.log("Data: ",new_data);
+                        setData(new_data);
+                    }
+                    
                 });
         }
+        // console.log("usestate ended");
         props.toggleRefresh(false);
     },[props.task, props.biasSelectedOption, props.panelRefresh]);
     useEffect(() => {
