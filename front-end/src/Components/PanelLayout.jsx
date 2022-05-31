@@ -33,6 +33,7 @@ const PanelLayout = () => {
     const [panelSpan, setPanelSpan] = useState({one: 4,two: 4,three: 4,four: 6,five: 6});
     const [biasloading, setBiasLoading] = useState(false);
     const [biasRefresh, setBiasRefresh] = useState(false);
+    const [panelRefresh, setPanelRefresh] = useState(false);
     const [netWorkloading, setNetWorkLoading] = useState(false);
     const [beeSwarmloading, setBeeSwarmloading] = useState(false);
     const [chordloading, setChordloading] = useState(false);
@@ -105,14 +106,16 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
 
     const handleClose = () => setShow(false);
     const handleSubmit = () => {
-        fetch(`/instance/${task}`, {
-            method: 'POST',
-            headers: {'Accept': 'application/json',
-                'Content-Type': 'application/json'},
-            body: JSON.stringify({instance: instance})
-        });
+        // fetch(`/instance/${task}`, {
+        //     method: 'POST',
+        //     headers: {'Accept': 'application/json',
+        //         'Content-Type': 'application/json'},
+        //     body: JSON.stringify({instance: instance})
+        // });
         setShow(false);
-        setBiasRefresh(true);
+        // setBiasRefresh(true);
+        setPanelRefresh(true);
+        // <Chord taskNeighbours={taskNeighbours} task={task} toggleLoading={setChordloading} colors={taskColors}/>
     };
 
 
@@ -481,11 +484,11 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
             }
         })
         .attr("stroke", (d) => {
-            console.log(d.key, selected);
+            // console.log(d.key, selected);
             return d.key == selected ? 'black' : 'none';
         })
         .attr("stroke-width", (d) => {
-            console.log(d.key, selected);
+            // console.log(d.key, selected);
             return d.key == selected ? '2' : '1';
         })
         svg_heatmap.selectAll('.rect')
@@ -664,7 +667,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                         <Col xs={7} lg={7} xl={7} style={{ padding: 10 }}>
                             <Select className='modelselector' styles={{width: '250px', display: 'inline'}}
                                     value={modelSelectOptions.filter(option => option.value === modelSelectedOption)}
-                                    styles={customStyles} options={modelSelectOptions} onChange={(event) => setModelSelectedOption(event.value)}/>
+                                    style={customStyles} options={modelSelectOptions} onChange={(event) => setModelSelectedOption(event.value)}/>
                         </Col>
                         <Col xs={1} lg={1} xl={1} style={{ padding: 0 }}>
                             <Button variant="light" style={{ padding: 0, opacity: beeSwarmOpacity }}
@@ -681,7 +684,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh', overflowX: 'scroll' }}>
-                            <BeeSwarm taskNeighbours={taskNeighbours} task={task} toggleLoading={setBeeSwarmloading} colors={taskColors}/>
+                            <BeeSwarm panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} taskNeighbours={taskNeighbours} task={task} toggleLoading={setBeeSwarmloading} colors={taskColors}/>
+                            {/* <BiasPanel panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/> */}
                         </Col>
                     </Row>
                 </Col>
@@ -719,7 +723,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
-                            <Chord taskNeighbours={taskNeighbours} task={task} toggleLoading={setChordloading} colors={taskColors}/>
+                            <Chord panelRefresh={panelRefresh} taskNeighbours={taskNeighbours} task={task} toggleLoading={setChordloading} colors={taskColors}/>
                         </Col>
                     </Row>
                 </Col>
@@ -799,7 +803,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
-                            <BiasPanel biasRefresh={biasRefresh} toggleRefresh={setBiasRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/>
+                            {/* <BiasPanel biasRefresh={biasRefresh} toggleRefresh={setBiasRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/> */}
+                            <BiasPanel panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/>
                         </Col>
                     </Row>
                 </Col>

@@ -24,7 +24,25 @@ const Chord = (props) => {
     
     useEffect(() => {
         if(data.length !== 0 ){
-            console.log(data);
+            // console.log("Data: ", data);
+            // console.log("Panel refresh: ", props.panelRefresh);
+            if(props.panelRefresh){
+                // console.log("Chord data: ", data);
+                let id = Object.keys(data);
+                // let counter = 0;
+                for(const key in id){
+                    const item = data[id[key]];
+                    // counter = counter + 1;
+                    // if(counter % 2 == 0) continue;
+                    for(var i = 0; i<10; i++){
+                        if(i % 2 == 0)
+                            data[id[key]][i] = data[id[key]][i] + 0.2;
+                        else
+                            data[id[key]][i] = data[id[key]][i] - 0.1;
+                    }
+                }
+                setData(data);
+            }
             const category_mapper = {};
             for ( let i = 0; i < embeddings.length; i ++ ) {
                 if(props.taskNeighbours.map(d => Object.keys(d)[0]).includes(embeddings[i].id)){
@@ -38,7 +56,9 @@ const Chord = (props) => {
                 const item = data[id[key]];
                 for(var i = 0; i<10; i++){
                     if(data[id[key]][i] < 0.24)
-                    data[id[key]][i] = 0;
+                        data[id[key]][i] = 0;
+                    else if(data[id[key]][i] > 1)
+                        data[id[key]][i] = 1;
                 }
             }
             
@@ -216,7 +236,7 @@ const Chord = (props) => {
             }
 
         }
-    },[data]);
+    },[data, props.panelRefresh]);
 
     return (
         <React.Fragment>

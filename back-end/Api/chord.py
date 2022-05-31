@@ -21,6 +21,7 @@ nltk.download('stopwords')
 
 
 def calculate_chord(selected_task):
+    print("Selected task: ", selected_task)
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     database = client["TestDB2"]
     k_closest = database["k_closest"]

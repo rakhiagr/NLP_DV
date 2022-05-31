@@ -11,7 +11,8 @@ const BiasPanel = (props) => {
     const [heatMapData, setHeatMapData] = useState([]);
 
     useEffect(() => {
-        if(props.task !== '' && (props.biasSelectedOption === 't10' || props.biasRefresh)){
+        // if(props.task !== '' && (props.biasSelectedOption === 't10' || props.biasRefresh)){
+        if(props.task !== '' && (props.biasSelectedOption === 't10' || props.panelRefresh)){
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
@@ -50,7 +51,7 @@ const BiasPanel = (props) => {
                         'negative': new_data2, 'negative_max' : max_y_value2, 'negative_min': min_y_value2 })
                 });
         }
-        else if(props.task !== '' && ( props.biasSelectedOption === 't11'  || props.biasRefresh)){
+        else if(props.task !== '' && ( props.biasSelectedOption === 't11'  || props.panelRefresh)){
             props.toggleLoading(true);
             fetch(`/heatmap/${props.task}`)
                 .then(response => response.json())
@@ -58,7 +59,7 @@ const BiasPanel = (props) => {
                     setHeatMapData(data);
                 });
         }
-        else if(props.task !== '' && ( props.biasSelectedOption !== 't10'  || props.biasRefresh)){
+        else if(props.task !== '' && ( props.biasSelectedOption !== 't10'  || props.panelRefresh)){
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
@@ -80,7 +81,7 @@ const BiasPanel = (props) => {
                 });
         }
         props.toggleRefresh(false);
-    },[props.task, props.biasSelectedOption, props.biasRefresh]);
+    },[props.task, props.biasSelectedOption, props.panelRefresh]);
     useEffect(() => {
         if(data.length !== 0){
             const svg = select(svgRef.current).attr("class", "bias-svg");
@@ -189,7 +190,7 @@ const BiasPanel = (props) => {
 
             let positive_center = xScale('positive') + 211.25;
             var box_width = 100
-
+            console.log("box plot loaded")
             svg
                 .append("line")
                 .attr("x1", positive_center)

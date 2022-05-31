@@ -6,10 +6,13 @@ import { NonceProvider } from 'react-select';
 
 const BeeSwarm = (props) => {
     const svgRef = useRef();
+    // const panelRefresh = useRef(false);
     const [data, setData] = useState(null);
+    // const [panelRefresh, setPanelRefresh] = useState(false);
 
     useEffect(() => {
         if(props.task !== ''){
+            console.log("task: ", props.task)
             props.toggleLoading(true);
              fetch('/swarm_plot')
                 .then(response => response.json())
@@ -22,7 +25,35 @@ const BeeSwarm = (props) => {
 
     useEffect(() => {
         if(data != null){
-            console.log("Beeswarm", data);
+            // console.log("Panel refresh: ", props.panelRefresh);
+            if(props.panelRefresh){
+                // console.log("New Beeswarm data: ", data[0])
+                // data.forEach( d => d.accuracy = d.accuracy + 0.1 );
+                const newArr = data.map((obj,idx) => {
+                    let acc = obj.accuracy;
+                    let id = +(obj.id.charAt(obj.id.length - 1));
+                    // if(idx == 0)
+                    //     console.log("Old Accuracy, id: ", acc, id)
+                    if(id % 2 == 0){
+                        if(acc > 0.2)        
+                            {return {...obj, accuracy: acc - 0.1};}
+                    }
+                    else{
+                        // console.log("Else part ");
+                        if(acc < 0.8){
+                            let new_acc = {...obj, accuracy:acc + 0.1};
+                            return new_acc;
+                        }
+                            
+                    }
+                    return obj;
+                  });
+                // console.log("Changed data: ", newArr[0]);
+                setData(newArr);
+            }
+            // else{
+            //     console.log("Old Beeswarm data", data[0]);
+            // }
             var colors = props.colors;
             const svg = d3.select(svgRef.current);
             svg.selectAll('*').remove();
@@ -36,7 +67,8 @@ const BeeSwarm = (props) => {
 
                 let yScale = d3
                     .scaleLinear()
-                    .domain(d3.extent(data.map((d) => +d["accuracy"])))
+                    .domain([0,1])
+                    // .domain(d3.extent(data.map((d) => +d["accuracy"])))
                     .range([svgRef.current.clientHeight-45 , 50]);
 
                 // let color = d3.scaleOrdinal().domain(sectors).range(d3.schemePaired);
@@ -154,7 +186,7 @@ const BeeSwarm = (props) => {
             }
         
        
-    },[data]);
+    },[data, props.panelRefresh]);
 
     return (
         <React.Fragment>
