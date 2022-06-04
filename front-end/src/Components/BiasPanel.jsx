@@ -12,7 +12,7 @@ const BiasPanel = (props) => {
 
     useEffect(() => {
         console.log("props: ", props);
-        if(props.task !== '' &&  props.biasSelectedOption === 't10' && (props.count === 0 || props.panelRefresh)){
+        if(props.task !== '' &&  props.biasSelectedOption === 't10' && props.count === 0){
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
@@ -21,7 +21,6 @@ const BiasPanel = (props) => {
                     let max_y_value = Number.NEGATIVE_INFINITY;
                     let min_y_value = Number.POSITIVE_INFINITY;
                     for (const key in result[0]['positive']) {
-
                         if(!key.includes("name")){
                             const item = {}
                             item['key'] = key;
@@ -31,7 +30,6 @@ const BiasPanel = (props) => {
                             min_y_value = Math.min(min_y_value, result[0]['positive'][key]);
                             new_data.push(item);
                         }
-
                     }
                     const new_data2 = [];
                     let max_y_value2 = Number.NEGATIVE_INFINITY;
@@ -51,7 +49,7 @@ const BiasPanel = (props) => {
                         'negative': new_data2, 'negative_max' : max_y_value2, 'negative_min': min_y_value2 })
                 });
         }
-        else if(props.task !== '' &&  props.biasSelectedOption === 't11' && (props.count === 0 || props.panelRefresh)){
+        else if(props.task !== '' &&  props.biasSelectedOption === 't11' && props.count === 0){
             props.toggleLoading(true);
             fetch(`/heatmap/${props.task}`)
                 .then(response => response.json())
@@ -59,7 +57,7 @@ const BiasPanel = (props) => {
                     setHeatMapData(data);
                 });
         }
-        else if(props.task !== '' &&  props.biasSelectedOption !== 't10' && (props.count === 0 || props.panelRefresh)){
+        else if(props.task !== '' &&  props.biasSelectedOption !== 't10' && props.count === 0){
             console.log("Panel refresh ", props.panelRefresh);
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
@@ -78,29 +76,23 @@ const BiasPanel = (props) => {
                         new_data.push(item);
                     }
                     setYMax(max_y_value);
-                    if(props.panelRefresh){
-                        console.log("Old data: ", new_data);
-                        for(var i = 0; i < 10; i++){
-                            if(new_data[i]['task_id'] == props.task)
-                                new_data[i]['value'] = new_data[i]['value'] + 5;
-                        }
-                        console.log("New data: ", new_data);
-                        setData(new_data);
-                        // console.log("Bias refreshed data: ", data);
-                    }
-                    else{
-                        console.log("Data: ",new_data);
-                        setData(new_data);
-                    }
+                    setData(new_data);
                 });
         }
-        // console.log("usestate ended");
         props.toggleRefresh(false);
-    },[props.task, props.biasSelectedOption, props.panelRefresh]);
+    },[props.task, props.biasSelectedOption]);
     useEffect(() => {
         if(data.length !== 0){
             const svg = select(svgRef.current).attr("class", "bias-svg");
             svg.selectAll("*").remove();
+            if(props.panelRefresh){
+                console.log("Old data: ", data);
+                for(var i = 0; i < 10; i++){
+                    if(data[i]['task_id'] == props.task)
+                        data[i]['value'] = data[i]['value'] + 5;
+                }
+                console.log("New data: ", data);
+            }
             const xScale = scaleBand().domain(data.map(d =>  d.key)).range([40,svgRef.current.clientWidth-50]).padding(0.25);
             const xAxis = axisBottom(xScale).ticks(data.length);
             svg.append("g")
@@ -115,7 +107,6 @@ const BiasPanel = (props) => {
                 .style("transform", `translateX(${40}px)`)
                 .style("font-size", `1rem`)
                 .call(yAxis);
-            // let colourScale = scaleSequential().domain([-yMax, yMax]).interpolator(interpolateBuPu);
             var colors = props.colors;
             svg.selectAll(".bar")
                 .data(data)
@@ -149,15 +140,6 @@ const BiasPanel = (props) => {
                 })
                 .transition()
                 .attr("fill",(d,i) => colors[i])
-                // .style("stroke", (d,i) => {
-                //     if(d.task_id === props.task){
-                //         return "black";
-                //     }else{
-                //         return "none";
-                //     }
-                // })
-                // .style("stroke", "black")
-                // .style("stroke-width", "1")
                 .attr("height",(d) => svgRef.current.clientHeight-20-yScale(d.value));
                 document.addEventListener('spherePointHovered', (event) =>{
                     svg.selectAll(".bar")
@@ -172,8 +154,9 @@ const BiasPanel = (props) => {
                         .style("opacity", 1);
                 }, false);
             props.toggleLoading(false);
+            props.toggleRefresh(false);
         }
-    },[data]);
+    },[data, props.panelRefresh]);
     useEffect(() => {
         if(Object.keys(boxPlotData).length !== 0 && boxPlotData['positive'].length !== 0){
             const svg = select(svgRef.current);
