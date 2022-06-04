@@ -12,7 +12,7 @@ const BiasPanel = (props) => {
 
     useEffect(() => {
         console.log("props: ", props);
-        if(props.task !== '' &&  props.biasSelectedOption === 't10' && props.count === 0){
+        if(props.task !== '' &&  props.biasSelectedOption === 't10'){
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
@@ -49,7 +49,7 @@ const BiasPanel = (props) => {
                         'negative': new_data2, 'negative_max' : max_y_value2, 'negative_min': min_y_value2 })
                 });
         }
-        else if(props.task !== '' &&  props.biasSelectedOption === 't11' && props.count === 0){
+        else if(props.task !== '' &&  props.biasSelectedOption === 't11'){
             props.toggleLoading(true);
             fetch(`/heatmap/${props.task}`)
                 .then(response => response.json())
@@ -57,7 +57,7 @@ const BiasPanel = (props) => {
                     setHeatMapData(data);
                 });
         }
-        else if(props.task !== '' &&  props.biasSelectedOption !== 't10' && props.count === 0){
+        else if(props.task !== '' &&  props.biasSelectedOption !== 't10'){
             console.log("Panel refresh ", props.panelRefresh);
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
@@ -79,6 +79,7 @@ const BiasPanel = (props) => {
                     setData(new_data);
                 });
         }
+
         props.toggleRefresh(false);
     },[props.task, props.biasSelectedOption]);
     useEffect(() => {
