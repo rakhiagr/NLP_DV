@@ -12,7 +12,7 @@ const BeeSwarm = (props) => {
 
     useEffect(() => {
         if(props.task !== ''){
-            console.log("task: ", props.task)
+            // console.log("task: ", props.task)
             props.toggleLoading(true);
              fetch('/swarm_plot')
                 .then(response => response.json())

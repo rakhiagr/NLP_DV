@@ -55,7 +55,7 @@ const PanelLayout = () => {
     const [category_map, setCategory_map] = useState({});
     const [modelSelectedOption, setModelSelectedOption] = useState('GPT');
     const [modelSelectOptions, setModelSelectOptions] = useState([{value: 'GPT', label: 'GPT'}, {value: 'LSTM', label: 'LSTM'}]);
-
+    const [count, setCount] = useState(0);
     const [biasSelectOptions, setBiasSelectOptions] = useState([
         { value: 't1', label: 'Unique Vocabulary' },
         { value: 't2', label: 'Sentence Lengths' },
@@ -70,6 +70,8 @@ const PanelLayout = () => {
         { value: 't11', label: 'Word Overlap' },
     ]
 );
+
+    
 
     const [taskColors, setTaskColors] = useState({
         1 : "#F94144",
@@ -113,10 +115,11 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         //     body: JSON.stringify({instance: instance})
         // });
         setShow(false);
-        
-        setPanelRefresh(true);
+        setCount(1);
+        // setPanelRefresh(true);
         // setBiasRefresh(true);
         setBiasLoading(true);
+        setPanelRefresh(true);
         // <Chord taskNeighbours={taskNeighbours} task={task} toggleLoading={setChordloading} colors={taskColors}/>
     };
 
@@ -806,7 +809,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
                             {/* <BiasPanel biasRefresh={biasRefresh} toggleRefresh={setBiasRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/> */}
-                            <BiasPanel panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/>
+                            <BiasPanel panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors} count = {count} firstRun = {setCount} />
                         </Col>
                     </Row>
                 </Col>

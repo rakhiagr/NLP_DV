@@ -25,7 +25,7 @@ const Chord = (props) => {
     useEffect(() => {
         if(data.length !== 0 ){
             // console.log("Data: ", data);
-            console.log("Panel refresh: ", props.panelRefresh);
+            // console.log("Panel refresh: ", props.panelRefresh);
             if(props.panelRefresh){
                 // console.log("Chord data: ", data);
                 let id = Object.keys(data);
