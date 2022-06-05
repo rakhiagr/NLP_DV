@@ -24,21 +24,15 @@ const Chord = (props) => {
     
     useEffect(() => {
         if(data.length !== 0 ){
-            // console.log("Data: ", data);
-            // console.log("Panel refresh: ", props.panelRefresh);
+            
             if(props.panelRefresh){
-                // console.log("Chord data: ", data);
+                var random_val = Math.random() * (0.3 + 0.3) - 0.3;
                 let id = Object.keys(data);
-                // let counter = 0;
                 for(const key in id){
                     const item = data[id[key]];
-                    // counter = counter + 1;
-                    // if(counter % 2 == 0) continue;
                     for(var i = 0; i<10; i++){
-                        if(i % 2 == 0)
-                            data[id[key]][i] = data[id[key]][i] + 0.2;
-                        else
-                            data[id[key]][i] = data[id[key]][i] - 0.1;
+                        if(data[id[key]][i] + random_val >= 0 && data[id[key]][i] + random_val <= 1)
+                            data[id[key]][i]+= random_val;
                     }
                 }
                 setData(data);
@@ -62,7 +56,7 @@ const Chord = (props) => {
                 }
             }
             
-            d3.select(svgRef.current).selectAll("*").remove(); ///
+            d3.select(svgRef.current).selectAll("*").remove(); 
 
             const index_task_id_map = {}
             const reverse_index_task_id_map = {}
@@ -76,8 +70,6 @@ const Chord = (props) => {
 
             const outerRadius = (svgRef.current.clientWidth/2) - 170;
             const innerRadius = outerRadius - 35;
-            // const color = d3.scaleSequential().domain([0,matrix.length])
-            //     .interpolator(d3.interpolate('#A3E4D7', '#264653'));
             const opacityDefault = 0.8;
 
             const chord = d3.chord()

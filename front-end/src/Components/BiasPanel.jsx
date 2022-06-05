@@ -121,12 +121,13 @@ const BiasPanel = (props) => {
         if(data.length !== 0 && props.biasSelectedOption !== 't10' && props.biasSelectedOption !== 't11'){
             const svg = select(svgRef.current).attr("class", "bias-svg");
             svg.selectAll("*").remove();
-            // console.log("bar graph ", data);
+            var y_max = yMax;
             if(props.panelRefresh){
-                // console.log("Old data: ", data);
+                var random_val = (Math.random() * (0.7 + 0.7) - 0.7)*10;
                 for(var i = 0; i < 10; i++){
                     if(data[i]['task_id'] == props.task)
-                        data[i]['value'] = data[i]['value'] + 5;
+                        data[i]['value'] = data[i]['value'] + random_val;
+                    y_max = Math.max(data[i]['value'], y_max);
                 }
                 // console.log("New data: ", data);
             }
@@ -137,7 +138,7 @@ const BiasPanel = (props) => {
                 .style("font-size", `1rem`)
                 .call(xAxis);
             const yScale = scaleLinear()
-                .domain([0, yMax])
+                .domain([0, y_max+10])
                 .range([svgRef.current.clientHeight-20, 20]);
             const yAxis = axisLeft(yScale).ticks(data.length);
             svg.append("g")
@@ -198,20 +199,13 @@ const BiasPanel = (props) => {
         if(Object.keys(boxPlotData).length !== 0 && boxPlotData['positive'].length !== 0 && props.biasSelectedOption === 't10'){
             const svg = select(svgRef.current);
             svg.selectAll("*").remove();
-            // console.log("Box Plot Data: ", boxPlotData);
-            
-            // var i = 0;
-            svg.selectAll("*").remove();
-
-            // console.log("Box Plot Old Data: ", boxPlotData);
             if(props.panelRefresh){
                 for(var k of Object.keys(boxPlotData['positive'])){
-                    boxPlotData['positive'][k]['value'] += 0.3;
-                    boxPlotData['negative'][k]['value'] -= 0.3;
+                    var random_val = Math.random() * (0.3 + 0.3) - 0.3;
+                    boxPlotData['positive'][k]['value'] += random_val;
+                    boxPlotData['negative'][k]['value'] += random_val;
                 }
-                // console.log("Box Plot New Data: ", boxPlotData);
             }
-            // console.log("Box Plot Data: ", boxPlotData);
             let max_y_value = Number.NEGATIVE_INFINITY;
             let min_y_value = Number.POSITIVE_INFINITY;
             let max_y_value2 = Number.NEGATIVE_INFINITY;
@@ -223,8 +217,7 @@ const BiasPanel = (props) => {
                 min_y_value2 = Math.min(min_y_value2, boxPlotData['negative'][k]['value']);
                 max_y_value2 = Math.max(max_y_value2, boxPlotData['negative'][k]['value']);
             }
-            // console.log("Min_P, Min_N, Max_P, Max_N: ", min_y_value, min_y_value2, max_y_value, max_y_value2);
-            // var colors = props.colors;
+            
             const xScale = scaleBand().domain(['positive', 'negative']).range([55,svgRef.current.clientWidth-50]);
             const xAxis = axisBottom(xScale).ticks(2);
             svg.append("g")
@@ -368,21 +361,20 @@ const BiasPanel = (props) => {
         if(heatMapData.length !== 0 && props.biasSelectedOption === 't11'){
             const svg = select(svgRef.current).attr("class", "heatmap-svg");
             svg.selectAll("*").remove();
-            console.log("Heat Map data: ", heatMapData);
             if(props.panelRefresh){
                 var selected_task = props.selectedTaskId;
                 for(var k in heatMapData){
                     var val = +heatMapData[k]['value'];
                     if(heatMapData[k]['group'] === selected_task){
                         if(heatMapData[k]['group'] !== heatMapData[k]['variable']){
-                            if(val < 0.7){
-                                val += 0.3;
+                            var random_val = Math.random() * (0.3 + 0.3) - 0.3;
+                            if(val + random_val >= 0 && val + random_val < 1){
+                                val += random_val;
                                 heatMapData[k]['value'] = '' + val;
                             }
                         }
                     }
                 }
-                console.log("Heat Map Updated data: ", heatMapData);
             }
             const xScale = scaleBand().domain(heatMapData.map(d =>  d.group)).range([75,svgRef.current.clientWidth-50]).padding(0.05);
             const xAxis = axisBottom(xScale).ticks(data.length);

@@ -30,15 +30,9 @@ const BeeSwarm = (props) => {
                     // console.log("obj: ", obj)
                     let acc = obj.accuracy;
                     let id = +(obj.id.charAt(obj.id.length - 1));
-                    if(id % 2 == 0){
-                        if(acc > 0.2)        
-                            {return {...obj, accuracy: acc - 0.1};}
-                    }
-                    else{
-                        if(acc < 0.8){
-                            let new_acc = {...obj, accuracy:acc + 0.1};
-                            return new_acc;
-                        }
+                    var random_val = Math.random() * (0.3 + 0.3) - 0.3;
+                    if(acc + random_val >= 0 && acc + random_val <= 1){
+                        {return {...obj, accuracy: acc + random_val};}
                     }
                     return obj;
                   });
