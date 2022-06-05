@@ -10,41 +10,6 @@ const BiasPanel = (props) => {
     const [boxPlotData, setBoxPlotData] = useState({});
     const [heatMapData, setHeatMapData] = useState([]);
 
-// function updateBoxPlotData(result){
-//     const new_data = [];
-//     for (const key in result[0]['positive']) {
-//         if(!key.includes("name")){
-//             const item = {}
-//             item['key'] = key;
-//             if(props.panelRefresh){
-//                 item['value'] = result[0]['positive'][key] + 0.3;
-//             }
-//             else{
-//                 item['value'] = result[0]['positive'][key];
-//             }
-//             item['instance_name'] = result[0]['positive'][key+"_name"];
-//             new_data.push(item);
-//         }
-//     }
-//     const new_data2 = [];
-//     for (const key in result[0]['negative']) {
-//         if(!key.includes("name")){
-//             const item = {}
-//             item['key'] = key;
-//             if(props.panelRefresh){
-//                 item['value'] = result[0]['negative'][key] + 0.3;
-//             }
-//             else{
-//                 item['value'] = result[0]['negative'][key];
-//             }
-//             item['instance_name'] = result[0]['negative'][key+"_name"];
-//             new_data2.push(item);
-//         }
-//     }
-//     // setBoxPlotData({'positive': new_data, 'positive_max' : max_y_value, 'positive_min': min_y_value,
-//     //     'negative': new_data2, 'negative_max' : max_y_value2, 'negative_min': min_y_value2 })
-//     setBoxPlotData({'positive': new_data, 'negative': new_data2, });
-// }
 
     useEffect(() => {
         // console.log("props: ", props);
@@ -69,8 +34,6 @@ const BiasPanel = (props) => {
                         }
                     }
                     const new_data2 = [];
-                    // let max_y_value2 = Number.NEGATIVE_INFINITY;
-                    // let min_y_value2 = Number.POSITIVE_INFINITY;
                     for (const key in result[0]['negative']) {
                         if(!key.includes("name")){
                             const item = {}
@@ -220,15 +183,21 @@ const BiasPanel = (props) => {
             
             const xScale = scaleBand().domain(['positive', 'negative']).range([55,svgRef.current.clientWidth-50]);
             const xAxis = axisBottom(xScale).ticks(2);
+            //xScale('positive') + 211.25
+            
             svg.append("g")
                 .style("transform", `translateY(${svgRef.current.clientHeight-25}px)`)
                 .style("font-size", `1rem`)
-                .call(xAxis);
+                .call(xAxis)
+                .selectAll(".tick").attr("id", function(d,i) {return "label_"+i});
+            d3.select("#label_0").style("transform", "translateX(266.25px)");
+            d3.select("#label_1").style("transform", "translateX(848.75px)");
             const yScaleMin = Math.min(min_y_value, min_y_value2);
             const yScaleMax = Math.max(max_y_value,max_y_value2);
 
             const yScale = scaleLinear()
                 .domain([yScaleMin - (yScaleMax-yScaleMin)/10,yScaleMax + (yScaleMax-yScaleMin)/10])
+                // .domain([0,1])
                 .range([svgRef.current.clientHeight-25, 20]);
 
             const yAxis = axisLeft(yScale);

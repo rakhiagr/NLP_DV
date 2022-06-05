@@ -52,10 +52,7 @@ const BeeSwarm = (props) => {
                 let yScale = d3
                     .scaleLinear()
                     .domain([0,1])
-                    // .domain(d3.extent(data.map((d) => +d["accuracy"])))
                     .range([svgRef.current.clientHeight-45 , 50]);
-
-                // let color = d3.scaleOrdinal().domain(sectors).range(d3.schemePaired);
                 let Domain = d3.extent(data.map((d) => d["accuracy"]));
                 Domain = Domain.map((d) => d);
                 let size = d3.scaleLinear().domain(Domain).range([2, 8]);
