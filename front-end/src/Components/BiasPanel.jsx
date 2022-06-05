@@ -10,43 +10,79 @@ const BiasPanel = (props) => {
     const [boxPlotData, setBoxPlotData] = useState({});
     const [heatMapData, setHeatMapData] = useState([]);
 
+// function updateBoxPlotData(result){
+//     const new_data = [];
+//     for (const key in result[0]['positive']) {
+//         if(!key.includes("name")){
+//             const item = {}
+//             item['key'] = key;
+//             if(props.panelRefresh){
+//                 item['value'] = result[0]['positive'][key] + 0.3;
+//             }
+//             else{
+//                 item['value'] = result[0]['positive'][key];
+//             }
+//             item['instance_name'] = result[0]['positive'][key+"_name"];
+//             new_data.push(item);
+//         }
+//     }
+//     const new_data2 = [];
+//     for (const key in result[0]['negative']) {
+//         if(!key.includes("name")){
+//             const item = {}
+//             item['key'] = key;
+//             if(props.panelRefresh){
+//                 item['value'] = result[0]['negative'][key] + 0.3;
+//             }
+//             else{
+//                 item['value'] = result[0]['negative'][key];
+//             }
+//             item['instance_name'] = result[0]['negative'][key+"_name"];
+//             new_data2.push(item);
+//         }
+//     }
+//     // setBoxPlotData({'positive': new_data, 'positive_max' : max_y_value, 'positive_min': min_y_value,
+//     //     'negative': new_data2, 'negative_max' : max_y_value2, 'negative_min': min_y_value2 })
+//     setBoxPlotData({'positive': new_data, 'negative': new_data2, });
+// }
+
     useEffect(() => {
-        console.log("props: ", props);
+        // console.log("props: ", props);
         if(props.task !== '' &&  props.biasSelectedOption === 't10'){
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
                 .then(result => {
+                    // updateBoxPlotData(result);
                     const new_data = [];
-                    let max_y_value = Number.NEGATIVE_INFINITY;
-                    let min_y_value = Number.POSITIVE_INFINITY;
+                    // let max_y_value = Number.NEGATIVE_INFINITY;
+                    // let min_y_value = Number.POSITIVE_INFINITY;
                     for (const key in result[0]['positive']) {
                         if(!key.includes("name")){
                             const item = {}
                             item['key'] = key;
                             item['value'] = result[0]['positive'][key];
                             item['instance_name'] = result[0]['positive'][key+"_name"];
-                            max_y_value = Math.max(max_y_value, result[0]['positive'][key]);
-                            min_y_value = Math.min(min_y_value, result[0]['positive'][key]);
+                            // max_y_value = Math.max(max_y_value, result[0]['positive'][key]);
+                            // min_y_value = Math.min(min_y_value, result[0]['positive'][key]);
                             new_data.push(item);
                         }
                     }
                     const new_data2 = [];
-                    let max_y_value2 = Number.NEGATIVE_INFINITY;
-                    let min_y_value2 = Number.POSITIVE_INFINITY;
+                    // let max_y_value2 = Number.NEGATIVE_INFINITY;
+                    // let min_y_value2 = Number.POSITIVE_INFINITY;
                     for (const key in result[0]['negative']) {
                         if(!key.includes("name")){
                             const item = {}
                             item['key'] = key;
                             item['value'] = result[0]['negative'][key];
                             item['instance_name'] = result[0]['negative'][key+"_name"];
-                            max_y_value2 = Math.max(max_y_value2, result[0]['negative'][key]);
-                            min_y_value2 = Math.min(min_y_value2, result[0]['negative'][key]);
+                            // max_y_value2 = Math.max(max_y_value2, result[0]['negative'][key]);
+                            // min_y_value2 = Math.min(min_y_value2, result[0]['negative'][key]);
                             new_data2.push(item);
                         }
                     }
-                    setBoxPlotData({'positive': new_data, 'positive_max' : max_y_value, 'positive_min': min_y_value,
-                        'negative': new_data2, 'negative_max' : max_y_value2, 'negative_min': min_y_value2 })
+                    setBoxPlotData({'positive': new_data, 'negative': new_data2});
                 });
         }
         else if(props.task !== '' &&  props.biasSelectedOption === 't11'){
@@ -58,7 +94,7 @@ const BiasPanel = (props) => {
                 });
         }
         else if(props.task !== '' &&  props.biasSelectedOption !== 't10'){
-            console.log("Panel refresh ", props.panelRefresh);
+            // console.log("Panel refresh ", props.panelRefresh);
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
@@ -79,20 +115,20 @@ const BiasPanel = (props) => {
                     setData(new_data);
                 });
         }
-
         props.toggleRefresh(false);
     },[props.task, props.biasSelectedOption]);
     useEffect(() => {
-        if(data.length !== 0){
+        if(data.length !== 0 && props.biasSelectedOption !== 't10' && props.biasSelectedOption !== 't11'){
             const svg = select(svgRef.current).attr("class", "bias-svg");
             svg.selectAll("*").remove();
+            // console.log("bar graph ", data);
             if(props.panelRefresh){
-                console.log("Old data: ", data);
+                // console.log("Old data: ", data);
                 for(var i = 0; i < 10; i++){
                     if(data[i]['task_id'] == props.task)
                         data[i]['value'] = data[i]['value'] + 5;
                 }
-                console.log("New data: ", data);
+                // console.log("New data: ", data);
             }
             const xScale = scaleBand().domain(data.map(d =>  d.key)).range([40,svgRef.current.clientWidth-50]).padding(0.25);
             const xAxis = axisBottom(xScale).ticks(data.length);
@@ -159,37 +195,66 @@ const BiasPanel = (props) => {
         }
     },[data, props.panelRefresh]);
     useEffect(() => {
-        if(Object.keys(boxPlotData).length !== 0 && boxPlotData['positive'].length !== 0){
+        if(Object.keys(boxPlotData).length !== 0 && boxPlotData['positive'].length !== 0 && props.biasSelectedOption === 't10'){
             const svg = select(svgRef.current);
             svg.selectAll("*").remove();
+            // console.log("Box Plot Data: ", boxPlotData);
+            
+            // var i = 0;
+            svg.selectAll("*").remove();
+
+            // console.log("Box Plot Old Data: ", boxPlotData);
+            if(props.panelRefresh){
+                for(var k of Object.keys(boxPlotData['positive'])){
+                    boxPlotData['positive'][k]['value'] += 0.3;
+                    boxPlotData['negative'][k]['value'] -= 0.3;
+                }
+                // console.log("Box Plot New Data: ", boxPlotData);
+            }
+            // console.log("Box Plot Data: ", boxPlotData);
+            let max_y_value = Number.NEGATIVE_INFINITY;
+            let min_y_value = Number.POSITIVE_INFINITY;
+            let max_y_value2 = Number.NEGATIVE_INFINITY;
+            let min_y_value2 = Number.POSITIVE_INFINITY;
+
+            for(var k of Object.keys(boxPlotData['positive'])){
+                min_y_value = Math.min(min_y_value, boxPlotData['positive'][k]['value']);
+                max_y_value = Math.max(max_y_value, boxPlotData['positive'][k]['value']);
+                min_y_value2 = Math.min(min_y_value2, boxPlotData['negative'][k]['value']);
+                max_y_value2 = Math.max(max_y_value2, boxPlotData['negative'][k]['value']);
+            }
+            // console.log("Min_P, Min_N, Max_P, Max_N: ", min_y_value, min_y_value2, max_y_value, max_y_value2);
+            // var colors = props.colors;
             const xScale = scaleBand().domain(['positive', 'negative']).range([55,svgRef.current.clientWidth-50]);
             const xAxis = axisBottom(xScale).ticks(2);
             svg.append("g")
                 .style("transform", `translateY(${svgRef.current.clientHeight-25}px)`)
                 .style("font-size", `1rem`)
                 .call(xAxis);
-            const yScaleMin = Math.min(boxPlotData['positive_min'],boxPlotData['negative_min'])
-            const yScaleMax = Math.max(boxPlotData['positive_max'],boxPlotData['negative_max'])
+            const yScaleMin = Math.min(min_y_value, min_y_value2);
+            const yScaleMax = Math.max(max_y_value,max_y_value2);
+
             const yScale = scaleLinear()
                 .domain([yScaleMin - (yScaleMax-yScaleMin)/10,yScaleMax + (yScaleMax-yScaleMin)/10])
                 .range([svgRef.current.clientHeight-25, 20]);
+
             const yAxis = axisLeft(yScale);
             svg.append("g")
                 .style("transform", `translateX(${55}px)`)
                 .style("font-size", `1rem`)
                 .call(yAxis);
 
-            let data_unsorted = boxPlotData['positive'].map(d =>  ({ value : d.value, instance_name: d.instance_name }))
+            let data_unsorted = boxPlotData['positive'].map(d =>  ({ value : d.value, instance_name: d.instance_name, task_id : d.task_id }))
             let data_sorted = boxPlotData['positive'].map(d =>  d.value).sort(d3.ascending)
             let q1 = d3.quantile(data_sorted, .25)
             let median = d3.quantile(data_sorted, .5)
             let q3 = d3.quantile(data_sorted, .75)
-            let min = boxPlotData['positive_min']
-            let max = boxPlotData['positive_max']
+            let min = min_y_value;
+            let max = max_y_value;
 
             let positive_center = xScale('positive') + 211.25;
             var box_width = 100
-            console.log("box plot loaded")
+            // console.log("box plot loaded")
             svg
                 .append("line")
                 .attr("x1", positive_center)
@@ -205,7 +270,7 @@ const BiasPanel = (props) => {
                 .attr("height", (yScale(q1)-yScale(q3)) )
                 .attr("width", box_width )
                 .attr("stroke", "black")
-                .style("fill", "#EACEF7")
+                .style("fill", "#f7f7f7")
 
             svg
                 .selectAll("toto")
@@ -218,15 +283,15 @@ const BiasPanel = (props) => {
                 .attr("y2", function(d){ return(yScale(d))} )
                 .attr("stroke", "black")
 
-            let colourScale = scaleSequential().domain([yScaleMin - (yScaleMax-yScaleMin)/10,yScaleMax + (yScaleMax-yScaleMin)/10]).interpolator(interpolateBuPu);
+            // let colourScale = scaleSequential().domain([yScaleMin - (yScaleMax-yScaleMin)/10,yScaleMax + (yScaleMax-yScaleMin)/10]).interpolator(interpolateBuPu);
 
-            let data_unsorted2 = boxPlotData['negative'].map(d =>  ({ value : d.value, instance_name: d.instance_name }))
+            let data_unsorted2 = boxPlotData['negative'].map(d =>  ({ value : d.value, instance_name: d.instance_name, task_id : d.task_id}))
             let data_sorted2 = boxPlotData['negative'].map(d =>  d.value).sort(d3.ascending)
             let q1_2 = d3.quantile(data_sorted2, .25)
             let median_2 = d3.quantile(data_sorted2, .5)
             let q3_2 = d3.quantile(data_sorted2, .75)
-            let min_2 = boxPlotData['negative_min']
-            let max_2 = boxPlotData['negative_max']
+            let min_2 = min_y_value2;
+            let max_2 = max_y_value2;
 
             let negative_center = xScale('negative') + 211.25;
 
@@ -245,7 +310,7 @@ const BiasPanel = (props) => {
                 .attr("height", (yScale(q1_2)-yScale(q3_2)) )
                 .attr("width", box_width )
                 .attr("stroke", "black")
-                .style("fill", "#EACEF7")
+                .style("fill", "#f7f7f7")
 
             svg
                 .selectAll("toto")
@@ -260,33 +325,15 @@ const BiasPanel = (props) => {
 
             let circles = [];
             for (const data in data_unsorted){
-                circles.push({'value': data_unsorted[data].value, instance_name: data_unsorted[data].instance_name , center: positive_center})
+                circles.push({'value': data_unsorted[data].value, instance_name: data_unsorted[data].instance_name , center: positive_center, task_id : data_unsorted[data].task_id})
             }
             for (const data in data_unsorted2){
-                circles.push({'value': data_unsorted2[data].value, instance_name: data_unsorted2[data].instance_name , center: negative_center})
+                circles.push({'value': data_unsorted2[data].value, instance_name: data_unsorted2[data].instance_name , center: negative_center, task_id : data_unsorted2[data].task_id})
             }
             svg.selectAll("circle")
                 .data(circles)
                 .enter().append("circle")
-                .style("stroke", (d,i) => {
-                    if(circles.length === 42 && i === 20){
-                        return "black";
-                    }else if (circles.length === 42 && i === 41){
-                        return "black";
-                    }else {
-                        return "gray";
-                    }
-                })
-                .style("stroke-width", (d,i) => {
-                    if(circles.length === 42 && i === 20){
-                        return "3";
-                    }else if (circles.length === 42 && i === 41){
-                        return "3";
-                    }else {
-                        return "1";
-                    }
-                })
-                .style("fill", (d) => colourScale(d.value))
+                .attr("fill", props.selectedTaskColor)
                 .attr("r", 5)
                 .attr("cx", (d) => d.center)
                 .attr("cy", (d) => yScale(d.value))
@@ -312,14 +359,31 @@ const BiasPanel = (props) => {
                     document.getElementById('sphere-tooltip').style.display = 'none';
                     d3.select(event.currentTarget).style("opacity", 1);
                 });
+            props.toggleRefresh(false);
             props.toggleLoading(false);
         }
-    },[boxPlotData]);
-    useEffect(() => {
-        if(heatMapData.length !== 0){
-            const svg = select(svgRef.current).attr("class", "heatmap-svg");;
-            svg.selectAll("*").remove();
+    },[boxPlotData, props.panelRefresh]);
 
+    useEffect(() => {
+        if(heatMapData.length !== 0 && props.biasSelectedOption === 't11'){
+            const svg = select(svgRef.current).attr("class", "heatmap-svg");
+            svg.selectAll("*").remove();
+            console.log("Heat Map data: ", heatMapData);
+            if(props.panelRefresh){
+                var selected_task = props.selectedTaskId;
+                for(var k in heatMapData){
+                    var val = +heatMapData[k]['value'];
+                    if(heatMapData[k]['group'] === selected_task){
+                        if(heatMapData[k]['group'] !== heatMapData[k]['variable']){
+                            if(val < 0.7){
+                                val += 0.3;
+                                heatMapData[k]['value'] = '' + val;
+                            }
+                        }
+                    }
+                }
+                console.log("Heat Map Updated data: ", heatMapData);
+            }
             const xScale = scaleBand().domain(heatMapData.map(d =>  d.group)).range([75,svgRef.current.clientWidth-50]).padding(0.05);
             const xAxis = axisBottom(xScale).ticks(data.length);
             svg.append("g")
@@ -376,8 +440,9 @@ const BiasPanel = (props) => {
                     d3.select(event.currentTarget).style("opacity", 1);
                 })
             props.toggleLoading(false);
+            props.toggleRefresh(false);
         }
-    },[heatMapData]);
+    },[heatMapData, props.panelRefresh]);
     return (
         <React.Fragment>
             <svg ref={svgRef} style={{ width: '100%', height: '95%'}}>

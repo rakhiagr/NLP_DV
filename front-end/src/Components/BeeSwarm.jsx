@@ -12,7 +12,7 @@ const BeeSwarm = (props) => {
 
     useEffect(() => {
         if(props.task !== ''){
-            // console.log("task: ", props.task)
+            console.log("Beeswarm Props: ", props)
             props.toggleLoading(true);
              fetch('/swarm_plot')
                 .then(response => response.json())
@@ -25,35 +25,25 @@ const BeeSwarm = (props) => {
 
     useEffect(() => {
         if(data != null){
-            // console.log("Panel refresh: ", props.panelRefresh);
             if(props.panelRefresh){
-                // console.log("New Beeswarm data: ", data[0])
-                // data.forEach( d => d.accuracy = d.accuracy + 0.1 );
-                const newArr = data.map((obj,idx) => {
+                const newArr = data.map((obj) => {
+                    // console.log("obj: ", obj)
                     let acc = obj.accuracy;
                     let id = +(obj.id.charAt(obj.id.length - 1));
-                    // if(idx == 0)
-                    //     console.log("Old Accuracy, id: ", acc, id)
                     if(id % 2 == 0){
                         if(acc > 0.2)        
                             {return {...obj, accuracy: acc - 0.1};}
                     }
                     else{
-                        // console.log("Else part ");
                         if(acc < 0.8){
                             let new_acc = {...obj, accuracy:acc + 0.1};
                             return new_acc;
                         }
-                            
                     }
                     return obj;
                   });
-                // console.log("Changed data: ", newArr[0]);
                 setData(newArr);
             }
-            // else{
-            //     console.log("Old Beeswarm data", data[0]);
-            // }
             var colors = props.colors;
             const svg = d3.select(svgRef.current);
             svg.selectAll('*').remove();

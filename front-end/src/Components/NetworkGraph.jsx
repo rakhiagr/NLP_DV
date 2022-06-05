@@ -118,6 +118,10 @@ const NetworkGraph = (props) => {
           .enter().append("circle")
             .attr("r", 10)
             .attr("fill", function(d, i) {
+                if(d.id === props.task){
+                    props.setSelectedTaskColor(props.colors[i]);
+                    props.setSelectedTaskId("task_"+ (i+1));
+                }
                 return props.colors[i];})
             .attr("node-type", (d) => {
                 return d.id === props.task ? 'selected' : 'neighbour';});

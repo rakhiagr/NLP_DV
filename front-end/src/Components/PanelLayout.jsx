@@ -53,6 +53,8 @@ const PanelLayout = () => {
     const [networkGraphOpacity, setNetworkGraphOpacity] = useState(0.1);
     const [source_map, setSource_map] = useState({});
     const [category_map, setCategory_map] = useState({});
+    const [selectedTaskColor, setSelectedTaskColor] = useState("#F94144");
+    const [selectedTaskId, setSelectedTaskId] = useState("task_1");
     const [modelSelectedOption, setModelSelectedOption] = useState('GPT');
     const [modelSelectOptions, setModelSelectOptions] = useState([{value: 'GPT', label: 'GPT'}, {value: 'LSTM', label: 'LSTM'}]);
     const [count, setCount] = useState(0);
@@ -346,6 +348,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         matContext.beginPath();
         matContext.arc(center, center, size/2, 0, 2 * Math.PI, false);
         matContext.closePath();
+        // matContext.strokeStyle = color;
+        // matContext.stroke()
         matContext.fillStyle = color;
         matContext.fill();
         texture.needsUpdate = true;
@@ -763,7 +767,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                         <NetworkGraph taskNeighbours={taskNeighbours} task={task} toggleLoading={setNetWorkLoading}
                             focusGroup_bias={focusGroup_bias} unfocusGroup_bias={unfocusGroup_bias} 
                             focusGroup_chord={focusGroup_chord} unfocusGroup_chord={unfocusGroup_chord}
-                            focusGroup={focusGroup} unfocusGroup={unfocusGroup} colors={taskColors}/>
+                            focusGroup={focusGroup} unfocusGroup={unfocusGroup} colors={taskColors} setSelectedTaskColor = {setSelectedTaskColor} setSelectedTaskId = {setSelectedTaskId}/>
                         </Col>
                     </Row>
                 </Col>
@@ -809,7 +813,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
                             {/* <BiasPanel biasRefresh={biasRefresh} toggleRefresh={setBiasRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/> */}
-                            <BiasPanel panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors} count = {count} firstRun = {setCount} />
+                            <BiasPanel panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors} 
+                            count = {count} selectedTaskColor = {selectedTaskColor} selectedTaskId = {selectedTaskId}/>
                         </Col>
                     </Row>
                 </Col>
