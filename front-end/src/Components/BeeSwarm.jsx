@@ -49,14 +49,14 @@ const BeeSwarm = (props) => {
                 let height = svgRef.current.clientHeight;
                 
 
-                let yScale = d3
-                    .scaleLinear()
+            let yScale = d3
+                .scaleLinear()
                     .domain([0,1])
                     .range([svgRef.current.clientHeight-45 , 50]);
                 let Domain = d3.extent(data.map((d) => d["accuracy"]));
                 Domain = Domain.map((d) => d);
                 let size = d3.scaleLinear().domain(Domain).range([2, 8]);
-    const yAxis = d3.axisLeft().scale(yScale).ticks(5);
+    const yAxis = d3.axisLeft().scale(yScale).ticks(5).tickSize(svgRef.current.clientWidth - 100);
     const xAxis = d3.axisBottom()
             .scale(xScale)
             .tickPadding(5);
@@ -64,9 +64,11 @@ const BeeSwarm = (props) => {
             // console.log('Selected task id: '. selectedTaskId);
         const xAxisG = svg.append('g')
             .style("font-size", `1rem`)
-            .attr('transform', `translate(0, ${svgRef.current.clientHeight-65})`);
+            .attr('transform', `translate(20, ${svgRef.current.clientHeight-65})`);
 
             svg
+                .append("g")
+                .attr("transform", `translate(20, -10)`)
                 .selectAll(".circ")
                 .data(data)
                 .enter()
@@ -78,7 +80,8 @@ const BeeSwarm = (props) => {
                     return colors[d.id.slice(5)-1]; 
                 })
                 .attr("r", (d) => size(d["accuracy"]))
-                .attr("cx", (d) => xScale(d.id))
+                .attr("cx", (d) => {
+                    return xScale(d.id)})
                 .attr("cy", (d) => yScale(d.accuracy))
                 .on("mouseover", (event, d) => {
                     let x = event.x,
@@ -102,8 +105,7 @@ const BeeSwarm = (props) => {
                     document.getElementById('sphere-tooltip').style.display = 'none';
                     d3.select(event.currentTarget).style("opacity", 1);
                 });
-
-                const yAxisG = svg.append('g').attr("transform", `translate(75, -20)`);
+                const yAxisG = svg.append('g').attr("transform", `translate(${svgRef.current.clientWidth - 40}, -20)`);
                 xAxisG.call(xAxis);
                 xAxisG.append('text')
                 .attr('class', 'label')
@@ -113,6 +115,13 @@ const BeeSwarm = (props) => {
                 .text("Categories for tasks")
                 .style("fill", "gray");
         
+                xAxisG.call(g => g.selectAll(".tick text")
+                        .attr("color", "gray"))
+                    .call(g => g.selectAll(".tick")
+                        .attr("color", "gray"))
+                    .call(g => g.selectAll(".domain")
+                        .attr("color", "gray")
+                        .attr("stroke", "gray"));
                 yAxisG.call(yAxis);
                 yAxisG.append('g')
                 .append('text')
@@ -120,12 +129,24 @@ const BeeSwarm = (props) => {
                 .attr('x', -height/2)
                 .attr('y', -40)
                 .attr('font-size', '16')
-                .attr('transform', 'rotate(' + -90 + ')')
+                // .attr('transform', 'rotate(' + -90 + ')')
+                .attr('transform', `translate(${-svgRef.current.clientWidth+110}, 0) rotate(-90)`)
                 .attr('text-anchor', 'middle')
                 .text("Accuracy of tasks")
                 .style("fill", "gray");
                 
-                let simulation = d3
+                yAxisG
+                .call(g => g.select(".domain").remove())
+                .call(g => g.selectAll(".tick:not(:first-of-type) line")
+                    .attr("stroke-capacity", 0.5)
+                    .attr("stroke-dasharray", "5,10")
+                    .attr("stroke", "gray"))
+                .call(g => g.selectAll(".tick:first-of-type line")
+                    .attr("stroke", "gray"))
+                .call(g => g.selectAll(".tick text")
+                    .attr("color", "gray"));
+                
+                    let simulation = d3
                     .forceSimulation(data)
                     .force(
                         "x",
