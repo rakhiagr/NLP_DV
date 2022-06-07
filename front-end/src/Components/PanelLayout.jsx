@@ -582,7 +582,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     lg ={{ span: panelSpan['one'], order: panelOrder['one'] }}
                     xl ={{ span: panelSpan['one'], order: panelOrder['one'] }}
                     xxl={{ span: panelSpan['one'], order: panelOrder['one'] }}
-                    style={{ minHeight: "50vh", maxHeight: "58vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
+                    style={{ minHeight: "50vh", maxHeight: "58vh", backgroundColor: "#f7f7f7", border: "1px solid", margin:"4px 4px 4px 6px" }} >
                     <SlidingPanel
                         type={'left'}
                         isOpen={sphereLegendPanel}
@@ -615,7 +615,6 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                                 </Col>
                             )}
                         </Row>
-
                         <Row
                             style={{ display: icon === 'source'? "block":"none", overflowX: 'scroll',overflowY: 'scroll',maxWidth: '32vw', maxHeight: "50vh", backgroundColor: "#f7f7f7"}}
                         >
@@ -630,8 +629,6 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                                 </Col>
                             )}
                         </Row>
-
-
                     </SlidingPanel>
                     <Row  style={{ display: !sphereLegendPanel? "flex":"none" }}>
                         <Col xs={1} lg={1} xl={1} style={{ padding: '10px' }}>
@@ -665,7 +662,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     lg ={{ span: panelSpan['two'], order: panelOrder['two'] }}
                     xl ={{ span: panelSpan['two'], order: panelOrder['two'] }}
                     xxl={{ span: panelSpan['two'], order: panelOrder['two'] }}
-                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
+                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid", margin: "4px"}} >
                     <Row>
                     <Col xs={2} lg={2} xl={2} style={{ padding: 0 }}>
                             <h1><ClipLoader color={'#9013FE'} loading={beeSwarmloading} size={30} /></h1>
@@ -694,7 +691,6 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh', overflowX: 'scroll' }}>
                             <BeeSwarm panelRefresh={panelRefresh} taskNeighbours={taskNeighbours} task={task} toggleLoading={setBeeSwarmloading} colors={taskColors}/>
-                            {/* <BiasPanel panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/> */}
                         </Col>
                     </Row>
                 </Col>
@@ -705,7 +701,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     lg ={{ span: panelSpan['three'], order: panelOrder['three'] }}
                     xl ={{ span: panelSpan['three'], order: panelOrder['three'] }}
                     xxl={{ span: panelSpan['three'], order: panelOrder['three'] }}
-                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
+                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" , margin: "4px", maxWidth: "32%"}} >
                     <Row>
                         <Col xs={6} lg={6} xl={6} style={{ paddingTop : '10px' }}>
                             <Select style={{width: '150px' }}
@@ -717,18 +713,6 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                                     value={chordSelectOptions2.filter(option => option.value === chordSelectedOption2)}
                                     styles={customStyles} options={chordSelectOptions2} onChange={(event) => handleChordSelectChange2(event)}  />
                         </Col>
-                        {/* <Col xs={1} lg={1} xl={1} style={{ paddingTop: '10px' }}>
-                            <Button variant="light" style={{ padding: 0, opacity: chordOpacity }}
-                                    onMouseEnter={e => {
-                                        setChordOpacity(1);
-                                    }}
-                                    onMouseLeave={e => {
-                                        setChordOpacity(0.1);
-                                    }}
-                                    onClick={() => expandPanelClickHandler('three')}>
-                                <AiOutlineExpandAlt style={{ fontSize: "2rem" }}></AiOutlineExpandAlt>
-                            </Button>
-                        </Col> */}
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
@@ -744,7 +728,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     lg ={{ span: panelSpan['four'], order: panelOrder['four'] }}
                     xl ={{ span: panelSpan['four'], order: panelOrder['four'] }}
                     xxl={{ span: panelSpan['four'], order: panelOrder['four'] }}
-                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
+                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" , margin: "4px", maxWidth: "50%"}} >
                     <Row>
                         <Col xs={2} lg={2} xl={2} style={{ padding: 0 }}>
                             <ClipLoader color={'#9013FE'} loading={netWorkloading} size={30} />
@@ -778,7 +762,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     lg ={{ span: panelSpan['five'], order: panelOrder['five'] }}
                     xl ={{ span: panelSpan['five'], order: panelOrder['five'] }}
                     xxl={{ span: panelSpan['five'], order: panelOrder['five'] }}
-                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" }} >
+                    style={{ minHeight: "50vh", backgroundColor: "#f7f7f7", border: "1px solid" , margin:"4px 4px 4px 6px", maxWidth: "49%"}} >
                     <Row>
                         <Col xs={4} lg={4} xl={4} style={{ padding: 0 }}>
                             <h1> <ClipLoader color={'#9013FE'} loading={biasloading} size={30} /> </h1>
