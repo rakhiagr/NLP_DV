@@ -70,10 +70,7 @@ const PanelLayout = () => {
         { value: 't9', label: 'Number of Trigrams' },
         { value: 't10', label: 'Examples Correlation' },
         { value: 't11', label: 'Word Overlap' },
-    ]
-);
-
-    
+    ]);
 
     const [taskColors, setTaskColors] = useState({
         1 : "#F94144",
@@ -86,7 +83,7 @@ const PanelLayout = () => {
         8 : "#B5838D",
         9 : "#118AB2",
         0 : "#F76F8E"
-    })
+    });
 
     const [sphereSelectOptions, setSphereSelectOptions] = useState([
             { value: 'Category', label: 'Category' },
@@ -98,34 +95,22 @@ const PanelLayout = () => {
         { value: 'Definition', label: 'Definition' },
         { value: 'Positive Example', label: 'Positive Example' },
         { value: 'Negative Example', label: 'Negative Example' },
-    ]
-);
-const [chordSelectOptions2, setChordSelectOptions2] = useState([
-    { value: 'STS', label: 'STS' },
-    { value: 'EmbeddingDistance', label: 'Embedding Distance' },
-]
-);
+    ]);
+
+    const [chordSelectOptions2, setChordSelectOptions2] = useState([
+        { value: 'STS', label: 'STS' },
+        { value: 'EmbeddingDistance', label: 'Embedding Distance' },
+    ]);
+
     const [show, setShow] = useState(false);
     const [instance, setInstance] = useState('');
-
     const handleClose = () => setShow(false);
     const handleSubmit = () => {
-        // fetch(`/instance/${task}`, {
-        //     method: 'POST',
-        //     headers: {'Accept': 'application/json',
-        //         'Content-Type': 'application/json'},
-        //     body: JSON.stringify({instance: instance})
-        // });
         setShow(false);
         setCount(1);
-        // setPanelRefresh(true);
-        // setBiasRefresh(true);
         setBiasLoading(true);
         setPanelRefresh(true);
-        // <Chord taskNeighbours={taskNeighbours} task={task} toggleLoading={setChordloading} colors={taskColors}/>
     };
-
-
     const customStyles = {
         menu: (provided, state) => ({
             ...provided,
@@ -135,26 +120,19 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
     const handleBiasSelectChange = (event) => {
         setBiasSelectedOption(event.value);
     }
-
     const handleChordSelectChange1 = (event) => {
         setChordSelectedOption(event.value);
     }
-
     const handleChordSelectChange2 = (event) => {
         setChordSelectedOption2(event.value);
     }
-
     const openUserPrompt = (event) => {
         setShow(true);
     }
-
     let camera, renderer, canvas, material, sourceMaterial, scene = '', focusMaterial, blurMaterial, clickMaterial, neighbours=[];
     let inside_button;
-    let category_colour = d3.scaleSequential().domain([1,115])
-        .interpolator(d3.interpolateRainbow);
-    let source_colour = d3.scaleSequential().domain([1,414])
-        .interpolator(d3.interpolateRainbow);
-
+    let category_colour = d3.scaleSequential().domain([1,115]).interpolator(d3.interpolateRainbow);
+    let source_colour = d3.scaleSequential().domain([1,414]).interpolator(d3.interpolateRainbow);
 
     const showTooltip = (event ) => {
         let x = event.origDomEvent.clientX,
@@ -165,180 +143,192 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         tooltip.style.display = 'block';
         if(document.getElementById('sphere-select-value').innerText.includes('Category') ){
             tooltip.innerText = event.target.userData.data.category;
-        }else{
+        }
+        else{
             tooltip.innerText = event.target.userData.data.source;
         }
     }
     const init = () => {
-            canvas = document.querySelector("#sphere");
-            let aspect_ratio = window.innerWidth/ window.innerHeight;
-            focusMaterial = new THREE.PointsMaterial( { size: 5, map: createCircleTexture('#0000ff', 256), transparent: true, depthWrite: false})
-            blurMaterial = new THREE.PointsMaterial( { size: 5, map: createCircleTexture('#d3d3d3', 256), transparent: true, depthWrite: false})
-            clickMaterial = new THREE.PointsMaterial( { size: 5, map: createCircleTexture('#ff0000', 256), transparent: true, depthWrite: false})
-            if(canvas !== null) {
-                canvas.style.width = '100%';
-                canvas.style.height = '100%';
-                canvas.width = canvas.clientWidth;
-                canvas.height = canvas.clientHeight;
-                canvas.addEventListener( 'keydown',  onkeydown);
-            }
-            if(scene === ''){
-                aspect_ratio = canvas.clientWidth / canvas.clientHeight;
-                camera = new THREE.PerspectiveCamera( 80, aspect_ratio, 1, 3000 );
-                camera.updateProjectionMatrix();
-                camera.position.z = 320;
-                scene = new THREE.Scene();
-                scene.background = new THREE.Color( 0xf7f7f7 );
-                let category_colour = d3.scaleSequential().domain([1,115])
-                    .interpolator(d3.interpolateRainbow);
-                let source_colour = d3.scaleSequential().domain([1,414])
-                    .interpolator(d3.interpolateRainbow);
-                let source_map = {};
-                let category_map = {};
-                renderer = new THREE.WebGLRenderer( { canvas, antialias: true } );
-                renderer.setPixelRatio( window.devicePixelRatio );
-                renderer.setSize( canvas.width, canvas.height );
-                const domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
-                material = []
-                sourceMaterial = []
-                for ( let i = 0; i < embeddings.length; i ++ ) {
-                    material.push(new THREE.PointsMaterial( { opacity: 1,size: 5, map: createCircleTexture(category_colour(embeddings[i]["category_number"]), 256), transparent: true, depthWrite: false}));
-                    sourceMaterial.push(new THREE.PointsMaterial( { opacity: 1,size: 5, map: createCircleTexture(source_colour(embeddings[i]["source_number"]), 256), transparent: true, depthWrite: false}));
-                    category_map[embeddings[i]["category_number"]] = embeddings[i]["category"]
-                    source_map[embeddings[i]["source_number"]] = embeddings[i]["source"]
-                    const geometry = new THREE.BufferGeometry();
-                    const vertices = [];
-                    const vertex = new THREE.Vector3();
-                    vertex.x = embeddings[i]["x"];
-                    vertex.y = embeddings[i]["y"];
-                    vertex.z = embeddings[i]["z"];
-                    vertex.normalize();
-                    vertex.multiplyScalar( 400 );
-                    vertices.push( vertex.x, vertex.y, vertex.z );
-                    geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
-                    let point;
-                    if(icon === 'category'){
-                        point = new THREE.Points( geometry, material[i] );
-                    }else{
-                        point = new THREE.Points( geometry, sourceMaterial[i] );
+        canvas = document.querySelector("#sphere");
+        let aspect_ratio = window.innerWidth/ window.innerHeight;
+        focusMaterial = new THREE.PointsMaterial( { size: 5, map: createCircleTexture('#0000ff', 256), transparent: true, depthWrite: false})
+        blurMaterial = new THREE.PointsMaterial( { size: 5, map: createCircleTexture('#d3d3d3', 256), transparent: true, depthWrite: false})
+        clickMaterial = new THREE.PointsMaterial( { size: 5, map: createCircleTexture('#ff0000', 256), transparent: true, depthWrite: false})
+        if(canvas !== null) {
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+            canvas.addEventListener( 'keydown',  onkeydown);
+        }
+        if(scene === ''){
+            aspect_ratio = canvas.clientWidth / canvas.clientHeight;
+            camera = new THREE.PerspectiveCamera( 80, aspect_ratio, 1, 3000 );
+            camera.updateProjectionMatrix();
+            camera.position.z = 320;
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color( 0xf7f7f7 );
+            let category_colour = d3.scaleSequential().domain([1,115])
+                .interpolator(d3.interpolateRainbow);
+            let source_colour = d3.scaleSequential().domain([1,414])
+                .interpolator(d3.interpolateRainbow);
+            let source_map = {};
+            let category_map = {};
+            renderer = new THREE.WebGLRenderer( { canvas, antialias: true } );
+            renderer.setPixelRatio( window.devicePixelRatio );
+            renderer.setSize( canvas.width, canvas.height );
+            const domEvents	= new THREEx.DomEvents(camera, renderer.domElement)
+            material = []
+            sourceMaterial = []
+            for ( let i = 0; i < embeddings.length; i ++ ) {
+                material.push(new THREE.PointsMaterial( { opacity: 1,size: 5, map: createCircleTexture(category_colour(embeddings[i]["category_number"]), 256), transparent: true, depthWrite: false}));
+                sourceMaterial.push(new THREE.PointsMaterial( { opacity: 1,size: 5, map: createCircleTexture(source_colour(embeddings[i]["source_number"]), 256), transparent: true, depthWrite: false}));
+                category_map[embeddings[i]["category_number"]] = embeddings[i]["category"]
+                source_map[embeddings[i]["source_number"]] = embeddings[i]["source"]
+                const geometry = new THREE.BufferGeometry();
+                const vertices = [];
+                const vertex = new THREE.Vector3();
+                vertex.x = embeddings[i]["x"];
+                vertex.y = embeddings[i]["y"];
+                vertex.z = embeddings[i]["z"];
+                vertex.normalize();
+                vertex.multiplyScalar( 400 );
+                vertices.push( vertex.x, vertex.y, vertex.z );
+                geometry.setAttribute( 'position', new THREE.Float32BufferAttribute( vertices, 3 ) );
+                let point;
+                if(icon === 'category'){
+                    point = new THREE.Points( geometry, material[i] );
+                }
+                else{
+                    point = new THREE.Points( geometry, sourceMaterial[i] );
+                }
+                point.scale.x = point.scale.y = point.scale.z = 0.5;
+                point.userData.data = embeddings[i];
+                point.updateMatrix();
+                scene.add(point);
+                domEvents.addEventListener(point, 'mouseover', (event) => {
+                    let spherePointHovered = new CustomEvent('spherePointHovered', {detail: point});
+                    document.dispatchEvent(spherePointHovered);
+                    if(event.target.material === blurMaterial || event.target.material === clickMaterial || event.target.material === focusMaterial ){
+                        neighbours = [];
                     }
-                    point.scale.x = point.scale.y = point.scale.z = 0.5;
-                    point.userData.data = embeddings[i];
-                    point.updateMatrix();
-                    scene.add(point);
-                    domEvents.addEventListener(point, 'mouseover', (event) => {
-                        let spherePointHovered = new CustomEvent('spherePointHovered', {detail: point});
-                        document.dispatchEvent(spherePointHovered);
-                        if(event.target.material === blurMaterial || event.target.material === clickMaterial || event.target.material === focusMaterial ){
-                            neighbours = [];
+                    if(neighbours.length !== 0){
+                        if(neighbours.includes(point.userData.data.id)){
+                            event.target.material.size = 10
+                            showTooltip(event);
                         }
-                        if(neighbours.length !== 0){
-                            if(neighbours.includes(point.userData.data.id)){
-                                event.target.material.size = 10
-                                showTooltip(event);
+                    }
+                    else{
+                        if(event.target.material !== blurMaterial && event.target.material !== clickMaterial && event.target.material !== focusMaterial ){
+                            let key = 'source_number';
+                            if(document.getElementById('sphere-select-value').innerText.includes('Category')){
+                                key = 'category_number';
                             }
-                        }else{
-                            if(event.target.material !== blurMaterial && event.target.material !== clickMaterial && event.target.material !== focusMaterial ){
-                                let key = 'source_number';
-                                if(document.getElementById('sphere-select-value').innerText.includes('Category')){
-                                    key = 'category_number';
-                                }
-                                for ( let i = 0; i < embeddings.length; i ++ ) {
-                                    if(event.target.parent.children[i] !== undefined){
-                                        event.target.parent.children[i].material.opacity = 0.5;
-                                        if(event.target.userData.data[key] === event.target.parent.children[i].userData.data[key]){
-                                            event.target.parent.children[i].material.opacity = 1;
-                                            event.target.parent.children[i].material.size = 7;
-                                        }
-                                    }
-                                }
-                                event.target.material.size = 10
-                                event.target.material.opacity = 1
-                                showTooltip(event);
-                            }else if(event.target.material === clickMaterial || event.target.material === focusMaterial){
-                                event.target.material.size = 10
-                                event.target.material.opacity = 1
-                                showTooltip(event);
-                            }else if(event.target.material === blurMaterial){
-                                showTooltip(event);
-                            }
-                        }
-                    }, false)
-                    domEvents.addEventListener(point, 'mouseout', (event) => {
-                        let spherePointUnhovered = new CustomEvent('spherePointUnHovered', {detail: point});
-                        document.dispatchEvent(spherePointUnhovered);
-                        setTimeout(function (){
-                            event.target.material.size = 5
                             for ( let i = 0; i < embeddings.length; i ++ ) {
                                 if(event.target.parent.children[i] !== undefined){
-                                    event.target.parent.children[i].material.opacity = 1;
-                                    event.target.parent.children[i].material.size = 5;
+                                    event.target.parent.children[i].material.opacity = 0.5;
+                                    if(event.target.userData.data[key] === event.target.parent.children[i].userData.data[key]){
+                                        event.target.parent.children[i].material.opacity = 1;
+                                        event.target.parent.children[i].material.size = 7;
+                                    }
                                 }
                             }
-                        }, 1000)
-                        setTimeout(function (){
-                            document.getElementById('sphere-tooltip').style.display = 'none';
-                        }, 2000)
-                    }, false)
-                    domEvents.addEventListener(point, 'click', async (event) => {
-                        showTooltip(event);
-                        const api_call = await fetch('/neighbours/'+ point.userData.data.id);
-                        const json = await api_call.json();
-                        setTask(point.userData.data.id);
-                        neighbours = json[0].neighbours;
-                        setTaskNeighbours(neighbours);
-                        neighbours = neighbours.map(n => Object.keys(n)).map(n => n[0]);
-                        neighbours.push(point.userData.data.id)
-                        for(let k=0;k<scene.children.length;k++){
-                            if(neighbours.includes(scene.children[k].userData.data.id)){
-                                scene.children[k].material = focusMaterial;
-                            }else{
-                                scene.children[k].material = blurMaterial;
+                            event.target.material.size = 10
+                            event.target.material.opacity = 1
+                            showTooltip(event);
+                        }
+                        else if(event.target.material === clickMaterial || event.target.material === focusMaterial){
+                            event.target.material.size = 10
+                            event.target.material.opacity = 1
+                            showTooltip(event);
+                        }
+                        else if(event.target.material === blurMaterial){
+                            showTooltip(event);
+                        }
+                    }
+                }, false)
+                domEvents.addEventListener(point, 'mouseout', (event) => {
+                    let spherePointUnhovered = new CustomEvent('spherePointUnHovered', {detail: point});
+                    document.dispatchEvent(spherePointUnhovered);
+                    setTimeout(function (){
+                        event.target.material.size = 5
+                        for ( let i = 0; i < embeddings.length; i ++ ) {
+                            if(event.target.parent.children[i] !== undefined){
+                                event.target.parent.children[i].material.opacity = 1;
+                                event.target.parent.children[i].material.size = 5;
                             }
                         }
-                        for ( let i = 0; i < material.length; i ++ ) {
-                            material[i].opacity = 1;
+                    }, 1000)
+                    setTimeout(function (){
+                        document.getElementById('sphere-tooltip').style.display = 'none';
+                    }, 2000)
+                }, false)
+                domEvents.addEventListener(point, 'click', async (event) => {
+                    showTooltip(event);
+                    const api_call = await fetch('/neighbours/'+ point.userData.data.id);
+                    const json = await api_call.json();
+                    setTask(point.userData.data.id);
+                    neighbours = json[0].neighbours;
+                    setTaskNeighbours(neighbours);
+                    neighbours = neighbours.map(n => Object.keys(n)).map(n => n[0]);
+                    neighbours.push(point.userData.data.id)
+                    for(let k=0;k<scene.children.length;k++){
+                        if(neighbours.includes(scene.children[k].userData.data.id)){
+                            scene.children[k].material = focusMaterial;
+                        }else{
+                            scene.children[k].material = blurMaterial;
                         }
-                        for ( let i = 0; i < sourceMaterial.length; i ++ ) {
-                            sourceMaterial[i].opacity = 1;
-                        }
-                        event.target.material = clickMaterial;
-                        setTimeout(function (){
-                            document.getElementById('sphere-tooltip').style.display = 'none';
-                        }, 1500)
-                    }, false)
-                }
-                setCurrentScene(scene);
-                setAllCategoryMaterials(material);
-                setAllSourceMaterials(sourceMaterial);
-                setSource_map(source_map);
-                setCategory_map(category_map);
+                    }
+                    for ( let i = 0; i < material.length; i ++ ) {
+                        material[i].opacity = 1;
+                    }
+                    for ( let i = 0; i < sourceMaterial.length; i ++ ) {
+                        sourceMaterial[i].opacity = 1;
+                    }
+                    event.target.material = clickMaterial;
+                    setTimeout(function (){
+                        document.getElementById('sphere-tooltip').style.display = 'none';
+                    }, 1500)
+                }, false)
             }
+            setCurrentScene(scene);
+            setAllCategoryMaterials(material);
+            setAllSourceMaterials(sourceMaterial);
+            setSource_map(source_map);
+            setCategory_map(category_map);
         }
+    }
+
     const onkeydown = (event) => {
         if(event.key === 'a'){
             camera.position.x += 10
-        }else if (event.key === 'd'){
+        }
+        else if (event.key === 'd'){
             camera.position.x -= 10
         }
         else if(event.key === 'w'){
             camera.position.y += 10
-        }else if (event.key === 's'){
+        }
+        else if (event.key === 's'){
             camera.position.y -= 10
-        } else if(event.key === 'q'){
+        }
+        else if(event.key === 'q'){
             camera.position.z += 10
-        }else if (event.key === 'e'){
+        }
+        else if (event.key === 'e'){
             camera.position.z -= 10
         }
         camera.lookAt( scene.position );
         renderer.render( scene, camera );
-      };
+    };
+    
     const animate = () => {
-          if(scene !== '' ){
-              requestAnimationFrame( animate );
-              renderer.render( scene, camera );
-          }
-      }
+        if(scene !== '' ){
+            requestAnimationFrame( animate );
+            renderer.render( scene, camera );
+        }
+    }
+
     const createCircleTexture = (color, size) => {
         var matCanvas = document.createElement('canvas');
         matCanvas.width = matCanvas.height = size;
@@ -348,13 +338,12 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         matContext.beginPath();
         matContext.arc(center, center, size/2, 0, 2 * Math.PI, false);
         matContext.closePath();
-        // matContext.strokeStyle = color;
-        // matContext.stroke()
         matContext.fillStyle = color;
         matContext.fill();
         texture.needsUpdate = true;
         return texture;
-      }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         init();
         animate();
@@ -369,6 +358,7 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         tooltip.style.maxHeight = '100px';
         tooltip.style.border = '1px solid black';
     }, false);
+
     const clearSphereSelection = (icon) => {
         if(icon === 'category'){
             for ( let i = 0; i < allCategoryMaterials.length; i ++ ) {
@@ -377,7 +367,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
             for ( let i = 0; i < embeddings.length; i ++ ) {
                 currentScene.children[i].material = allCategoryMaterials[i];
             }
-        }else{
+        }
+        else{
             for ( let i = 0; i < allSourceMaterials.length; i ++ ) {
                 allSourceMaterials[i].size = 5;
             }
@@ -385,43 +376,46 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                 currentScene.children[i].material = allSourceMaterials[i];
             }
         }
-
     }
+
     const toggleSourceCategory = (event) => {
         setSphereSelectedOption(event.value);
         if(icon === 'source'){
             setIcon('category');
             clearSphereSelection('category');
-        }else{
+        }
+        else{
             setIcon('source');
             clearSphereSelection('source');
         }
     }
+
     const expandPanelClickHandler = (panel) => {
-      let newPanelSpan = {one: 4,two: 4,three: 4,four: 6,five: 6};
-      if(panelSpan[panel] === 4 || panelSpan[panel] === 8 || panelSpan[panel] === 6 )  {
-          newPanelSpan[panel] = 12;
-      }
-      setPanelSpan(newPanelSpan);
-      if(panel === 'two' && panelSpan[panel] === 4){
-        setPanelOrder({one: 1,two: 0,three: 2,four: 3,five: 4,six: 5});
-      }
-      if(panel === 'two' && panelSpan[panel] === 12){
-        setPanelOrder({one: 0,two: 1,three: 2,four: 3,five: 4,six: 5});
-      }
-      if(panel === 'three' && panelSpan[panel] === 4){
-        setPanelOrder({one: 1,two: 2,three: 0,four: 3,five: 4,six: 5});
-      }
-      if(panel === 'three' && panelSpan[panel] === 12){
-        setPanelOrder({one: 0,two: 1,three: 2,four: 3,five: 4,six: 5});
-      }
-      if(panel === 'five' && panelSpan[panel] === 4){
-        setPanelOrder({one: 0,two: 1,three: 2,four: 4,five: 3,six: 5});
-      }
-      if(panel === 'five' && panelSpan[panel] === 12){
-        setPanelOrder({one: 0,two: 1,three: 2,four: 3,five: 4,six: 5});
-      }
-  }
+        let newPanelSpan = {one: 4,two: 4,three: 4,four: 6,five: 6};
+        if(panelSpan[panel] === 4 || panelSpan[panel] === 8 || panelSpan[panel] === 6 ){
+            newPanelSpan[panel] = 12;
+        }
+        setPanelSpan(newPanelSpan);
+        if(panel === 'two' && panelSpan[panel] === 4){
+            setPanelOrder({one: 1,two: 0,three: 2,four: 3,five: 4,six: 5});
+        }
+        if(panel === 'two' && panelSpan[panel] === 12){
+            setPanelOrder({one: 0,two: 1,three: 2,four: 3,five: 4,six: 5});
+        }
+        if(panel === 'three' && panelSpan[panel] === 4){
+            setPanelOrder({one: 1,two: 2,three: 0,four: 3,five: 4,six: 5});
+        }
+        if(panel === 'three' && panelSpan[panel] === 12){
+            setPanelOrder({one: 0,two: 1,three: 2,four: 3,five: 4,six: 5});
+        }
+        if(panel === 'five' && panelSpan[panel] === 4){
+            setPanelOrder({one: 0,two: 1,three: 2,four: 4,five: 3,six: 5});
+        }
+        if(panel === 'five' && panelSpan[panel] === 12){
+            setPanelOrder({one: 0,two: 1,three: 2,four: 3,five: 4,six: 5});
+        }
+    }
+
     const onSphereButtonMouseEnter = (event) => {
         let x = event.clientX,
             y = event.clientY,
@@ -431,9 +425,11 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         tooltip.style.display = 'block';
         tooltip.innerText = 'Grouped By ' + icon.toUpperCase();
     }
+
     const onUserPromptButtonMouseLeave = () => {
         document.getElementById('sphere-tooltip').style.display = 'none';
     }
+
     const onUserPromptButtonMouseEnter = (event) => {
         let x = event.clientX,
             y = event.clientY,
@@ -479,13 +475,10 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         svg_heatmap = d3.select(".heatmap-svg");
         svg_bar.selectAll('.bar')
         .style("opacity", (d) => {
-            // console.log(d);
             if(d.key == focus) {
-                // console.log(d.key);
                 return 1;
             }
             if(d.key == selected) {
-                // console.log(d.key);
                 return 0.6;
             }
             else {
@@ -493,18 +486,15 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
             }
         })
         .attr("stroke", (d) => {
-            // console.log(d.key, selected);
             return d.key == selected ? 'black' : 'none';
         })
         .attr("stroke-width", (d) => {
-            // console.log(d.key, selected);
             return d.key == selected ? '2' : '1';
         })
         svg_heatmap.selectAll('.rect')
         .style("opacity", (d) => {
-            console.log(d);
         });
-}
+    }
 
     const unfocusGroup_bias = (d) => {
         var svg_bar;
@@ -518,7 +508,6 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         svg = d3.select(".chord-svg");
         svg.selectAll('.chord')
         .style("opacity", (d) => {
-            // console.log("d", d);
             if(d.source.index == focus) {
                 return 1;
             }
@@ -537,7 +526,6 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         })
 
         svg.selectAll('.group').style("opacity", (d) => {
-            // console.log(d);
             if(d.index == focus) {
                 return 1;
             }
@@ -553,9 +541,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
         })
         .attr("stroke-width", (d) => {
             return d.index == selected ? '2' : '1';
-    });
-    // console.log("HI");
-}
+        });
+    }
 
     const unfocusGroup_chord = (d) => {
         var svg;
@@ -569,7 +556,8 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
     }
     if(icon === 'source'){
         inside_button = <SiCrowdsource style={{ fontSize: "2rem" }}></SiCrowdsource>;
-    }else{
+    }
+    else{
         inside_button = <MdCategory style={{ fontSize: "2rem" }}></MdCategory>;
     }
     return (
@@ -796,7 +784,6 @@ const [chordSelectOptions2, setChordSelectOptions2] = useState([
                     </Row>
                     <Row>
                         <Col xs={12} lg={12} xl={12} style={{ padding: 0, height: '50vh' }}>
-                            {/* <BiasPanel biasRefresh={biasRefresh} toggleRefresh={setBiasRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors}/> */}
                             <BiasPanel panelRefresh={panelRefresh} toggleRefresh={setPanelRefresh} biasSelectedOption = {biasSelectedOption} task={task} toggleLoading={setBiasLoading} colors={taskColors} 
                             count = {count} selectedTaskColor = {selectedTaskColor} selectedTaskId = {selectedTaskId}/>
                         </Col>

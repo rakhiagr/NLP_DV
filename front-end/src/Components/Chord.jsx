@@ -43,9 +43,9 @@ const Chord = (props) => {
                     category_mapper[embeddings[i].id] = embeddings[i].category;
                 }
             }
-            
+
             let id = Object.keys(data);
-            
+
             for(const key in id){
                 const item = data[id[key]];
                 for(var i = 0; i<10; i++){
@@ -67,11 +67,9 @@ const Chord = (props) => {
                 count = count +1;
                 matrix.push(data[key]);
             }
-
             const outerRadius = (svgRef.current.clientWidth/2) - 170;
             const innerRadius = outerRadius - 35;
             const opacityDefault = 0.8;
-
             const chord = d3.chord()
                 .padAngle(0.09);
             const arc = d3.arc()
@@ -79,15 +77,12 @@ const Chord = (props) => {
                 .outerRadius(outerRadius);
             const ribbonPath = d3.ribbon()
                 .radius(innerRadius);
-
             const svg = d3.select(svgRef.current).attr("class", "chord-svg")
                 .append("g")
                 .attr("transform", `translate(${svgRef.current.clientWidth/2},${svgRef.current.clientHeight/2})`)
                 .datum(chord(matrix));
 
             var colors = props.colors;
-            // console.log(colors);
-
             const outerCircle = svg.selectAll("g.group")
                 .data(function(chords) { return chords.groups; })
                 .enter().append("g")
@@ -99,9 +94,7 @@ const Chord = (props) => {
                 })
                 .on("mouseout", fade(opacityDefault, false))
                 .on("mouseout", mouseoutChord);
-
                 document.addEventListener('spherePointHovered', fade_sphere(0.1,reverse_index_task_id_map), false);
-
                 document.addEventListener('spherePointUnHovered', fade_sphere(opacityDefault,{}), false);
 
         var path = outerCircle.append("path")
@@ -131,8 +124,7 @@ const Chord = (props) => {
                 .data(function(chords) { return chords; })
                 .enter().append("path")
                 .attr("class", "chord")
-                .style("fill", function(d) { 
-                    // console.log(d.source.index, colors[d.source.index]);
+                .style("fill", function(d) {
                     return colors[d.source.index]; })
                 .style("opacity", opacityDefault)
                 .attr("d", ribbonPath).on("mouseover", (event, d) => {
@@ -180,9 +172,7 @@ const Chord = (props) => {
                             tooltip.style.maxWidth = '200px';
                             tooltip.style.maxHeight = '100px';
                             tooltip.style.border = '1px solid black';
-                            //console.log(category_mapper[Object.keys(props.taskNeighbours[d.index])]);
                             tooltip.innerText = category_mapper[Object.keys(props.taskNeighbours[d.index])];
-                            // d3.select(event.currentTarget).style("opacity", 0.8);
                         }
                         else{
                             document.getElementById('sphere-tooltip').style.display = 'none';
@@ -239,72 +229,3 @@ const Chord = (props) => {
 }
 
 export default Chord;
-
-
-
-
-
-// outerCircle.append("text")
-            // .attr("class", "titles")
-            //     .attr("x", 9)
-            //     .attr("dy", -20)
-            //     .append("textPath")
-            //     .attr("xlink:href", function(d) { return "#group" + d.index; })
-            //     .text(function(chords, i){
-            //         let l = category_mapper[Object.keys(props.taskNeighbours[i])[0]];
-            //         return l.split(" ")[0];
-            //     })
-            //     .append("tspan")
-            //         .attr("x", 9)
-            //         .attr("dy", 13)
-            //         .text(function(chords, i) {
-            //             return category_mapper[Object.keys(props.taskNeighbours[i])[0]].split(" ")[1];
-            //         })
-            //     .style("fill", "black")
-            //     .style("font-size", "10px")
-            //     .style("font-weight", "14");
-
-
-
- // svg.selectAll('.group').append("text")
-                // .attr("class", "titles")
-                //     .attr("x",)
-                //     .attr("dy", -20)
-                //     .append("textPath")
-                //     .attr("xlink:href", function(d) { return "#group" + d.index; })
-                //     .text(function(d) { 
-                //         console.log(d);
-                //         return "t_" + (d.index+1); })
-                //     .style("fill", "black")
-                // .style("font-size", "15px")
-                // .style("font-weight", 400);
-
-
-// outerCircle.append("text")
-            //     .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
-            //     .attr("dy", ".35em")
-            //     .attr("class", "titles")
-            //     .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
-            //     .attr("transform", function(d) {
-            //       return "rotate(" + (d.angle * 180 / Math.PI - 90) + ")"
-            //       + "translate(" + (outerRadius + 4) + ")"
-            //       + (d.angle > Math.PI ? "rotate(180)" : "");
-            //     })
-            //     .text(function(chords, i){
-            //         return category_mapper[Object.keys(props.taskNeighbours[i])[0]].split(" ").join("\n");
-            //     })
-            //     .style("font-size", 10);
-
-
-// outerCircle.append("text")
-            //     .attr("x", )
-            //     .attr("dy", 13)
-            //     .append("textPath")
-            //     .attr("xlink:href", function(d) { return "#group" + d.index; })
-            // //    .text(function(chords, i){return names[i];})
-            //     .text(function(d) { 
-            //             // console.log(d);
-            //             return "t_" + (d.index+1); })
-            //    .style("fill", "black")
-            //     .style("font-size", "15px")
-            //     .style("font-weight", 500);

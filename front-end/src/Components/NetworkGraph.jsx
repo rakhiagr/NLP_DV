@@ -18,7 +18,7 @@ const NetworkGraph = (props) => {
             fetch(`/definition/${props.task}`)
                 .then(response => response.json())
                 .then(result => {
-                    // console.log('Result: ', result);
+
                     setSelectedTaskDefinition(result[0]['definition']);
                     setFocusedTaskDefinition('');
                 })
@@ -35,8 +35,6 @@ const NetworkGraph = (props) => {
         let threshold = sum * 0.6;
         let nodes = props.taskNeighbours.map(n => ({ 'id': Object.keys(n)[0], 'level': Object.keys(n)[0] === props.task ? 1 : 2,
     'similarity': Object.keys(n)[0] === props.task ? 1 : n[Object.keys(n)[0]]}));
-        // console.log('Nodes: ', nodes);
-        // console.log('Neighbours: ', props.taskNeighbours);
 
         var neighbourSimilarity = new Array();
         for (let n of nodes) {
@@ -48,10 +46,10 @@ const NetworkGraph = (props) => {
                     neighbourSimilarity.push(obj);
                 })
         }
-        // console.log('Neighbour similarity to each other', neighbourSimilarity);
+        
 
         let neighbourList = props.taskNeighbours.filter(d => Object.keys(d)[0] != props.task);
-        // console.log('Neighbour List: ', neighbourList);
+        
 
         let links = props.taskNeighbours.map(n => ({ 'target': props.task, 'source': Object.keys(n)[0], 'strength': n[Object.keys(n)[0]] }))
         const reverse_index_task_id_map = {}
@@ -60,9 +58,7 @@ const NetworkGraph = (props) => {
             reverse_index_task_id_map[nodes[key].id] = count;
             count = count +1;
         }
-        // let neighbourLinks = neighbourSimilarity.map(n => )
 
-        // console.log('Links: ', links);
         let min = 1;
         let max = 0;
         for (let l of links) {
@@ -71,11 +67,9 @@ const NetworkGraph = (props) => {
             if(max < sim) max = sim;
         }
 
-        // console.log('Min max: ', min, max);
 
         var colorScale = d3.scaleSequential(d3.interpolate('#A3E4D7', '#264653'))
                             .domain([min, max]);
-                            // .interpolator(d3.interpolatePuRd);
 
         let adjlist = [];
         links.forEach(function(d) {
@@ -84,13 +78,8 @@ const NetworkGraph = (props) => {
         });
         const neigh = (a, b) => a === b || adjlist[a + "-" + b];
 
-        // console.log('Nodes are: ', nodes);
         var selectedTask = nodes.findIndex(d => d.id == props.task);
         setSelectedTaskID((selectedTask + 1).toString());
-        // console.log('Selected task: ', selectedTask);
-        // console.log('Index: ', selectedTask['index']);
-        // console.log('TYpes: ', typeof(selectedTask), typeof(selectedTask[0]), Object.keys(selectedTask[0]));
-        // setFocussedTaskID('Task ' + selectedTask[0].id.charAt(selectedTask[0].id.length-1));
 
         let simulation = d3.forceSimulation(nodes)
                              .force("charge", d3.forceManyBody().strength(-700))
@@ -109,7 +98,6 @@ const NetworkGraph = (props) => {
           .attr("stroke-width", (d) => {return d.similarity == 0 ? 0 : 1})
           .attr("stroke", "black")
 
-        // console.log('Data: ', nodes[0]);
 
         let nodeElements = svg.append("g")
           .attr("class", "nodes")
@@ -125,23 +113,6 @@ const NetworkGraph = (props) => {
                 return props.colors[i];})
             .attr("node-type", (d) => {
                 return d.id === props.task ? 'selected' : 'neighbour';});
-
-        // var neighbourSimilarityFiltered;
-        // neighbourSimilarityFiltered = neighbourSimilarity.filter(d => {
-        //     var res = [];
-        //     d[Object.keys(d)[0]].forEach( n => props.taskNeighbours.includes(Object.keys(n)[0]) ? res.push(Object.keys(n)[0]) : 0;
-        // });
-
-        // neighbourSimilarityFiltered = neighbourSimilarity.map((d) => {
-        //     return d[Object.keys(d)[0]].filter(n => props.taskNeighbours.includes(Object.keys(n)[0]))
-        // });
-
-        // neighbourSimilarityFiltered = neighbourSimilarity.forEach( (d) => {
-        //     console.log('d is: ', d);
-        //     return d[Object.keys(d)[0]].filter( (n) => {if(props.taskNeighbours.includes(n)){ console.log('In if: '); return n;}});
-        // }
-        // );
-        
         const focus = (event, d) => {
             fetch(`/definition/${d.id}`)
                 .then(response => response.json())
@@ -162,7 +133,7 @@ const NetworkGraph = (props) => {
                 return o.source.index === index || o.target.index === index ? 1 : 0.1;
             });
             var source_node = nodeElements.filter(function(d) {return d3.select(this).attr("node-type") == 'selected'}).nodes();
-            // console.log('Source Node: ', source_node);
+            
             props.focusGroup('task_'+(index+1), 'task_'+(source_node[0].__data__.index+1));
             props.focusGroup_chord((index), (source_node[0].__data__.index));
             props.focusGroup_bias('task_'+(index+1), 'task_'+(source_node[0].__data__.index+1));

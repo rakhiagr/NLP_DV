@@ -12,24 +12,22 @@ const BiasPanel = (props) => {
 
 
     useEffect(() => {
-        // console.log("props: ", props);
+        
         if(props.task !== '' &&  props.biasSelectedOption === 't10'){
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
                 .then(result => {
-                    // updateBoxPlotData(result);
+                    
                     const new_data = [];
-                    // let max_y_value = Number.NEGATIVE_INFINITY;
-                    // let min_y_value = Number.POSITIVE_INFINITY;
+                    
                     for (const key in result[0]['positive']) {
                         if(!key.includes("name")){
                             const item = {}
                             item['key'] = key;
                             item['value'] = result[0]['positive'][key];
                             item['instance_name'] = result[0]['positive'][key+"_name"];
-                            // max_y_value = Math.max(max_y_value, result[0]['positive'][key]);
-                            // min_y_value = Math.min(min_y_value, result[0]['positive'][key]);
+                            
                             new_data.push(item);
                         }
                     }
@@ -40,8 +38,7 @@ const BiasPanel = (props) => {
                             item['key'] = key;
                             item['value'] = result[0]['negative'][key];
                             item['instance_name'] = result[0]['negative'][key+"_name"];
-                            // max_y_value2 = Math.max(max_y_value2, result[0]['negative'][key]);
-                            // min_y_value2 = Math.min(min_y_value2, result[0]['negative'][key]);
+                            
                             new_data2.push(item);
                         }
                     }
@@ -57,7 +54,7 @@ const BiasPanel = (props) => {
                 });
         }
         else if(props.task !== '' &&  props.biasSelectedOption !== 't10'){
-            // console.log("Panel refresh ", props.panelRefresh);
+            
             props.toggleLoading(true);
             fetch(`/bias_${props.biasSelectedOption}/${props.task}`)
                 .then(response => response.json())
@@ -92,7 +89,6 @@ const BiasPanel = (props) => {
                         data[i]['value'] = data[i]['value'] + random_val;
                     y_max = Math.max(data[i]['value'], y_max);
                 }
-                // console.log("New data: ", data);
             }
             const xScale = scaleBand().domain(data.map(d =>  d.key)).range([40,svgRef.current.clientWidth-50]).padding(0.25);
             const xAxis = axisBottom(xScale).ticks(data.length);
@@ -113,23 +109,6 @@ const BiasPanel = (props) => {
             xAxisG.selectAll(".domain").attr("color", "gray");
             yAxisG.selectAll(".tick").attr("color", "gray");
             yAxisG.selectAll(".domain").attr("color", "gray");
-            
-            // xAxis.call(g => g.selectAll(".tick text")
-            //     .attr("color", "gray"))
-            // .call(g => g.selectAll(".tick")
-            //     .attr("color", "gray"))
-            // .call(g => g.selectAll(".domain")
-            //     .attr("color", "gray")
-            //     .attr("stroke", "gray"));
-
-            //     yAxis.call(g => g.selectAll(".tick text")
-            //     .attr("color", "gray"))
-            // .call(g => g.selectAll(".tick")
-            //     .attr("color", "gray"))
-            // .call(g => g.selectAll(".domain")
-            //     .attr("color", "gray")
-            //     .attr("stroke", "gray"));
-
             
             var colors = props.colors;
             svg.selectAll(".bar")
@@ -206,7 +185,6 @@ const BiasPanel = (props) => {
             
             const xScale = scaleBand().domain(['positive', 'negative']).range([55,svgRef.current.clientWidth-50]);
             const xAxis = axisBottom(xScale).ticks(2);
-            //xScale('positive') + 211.25
             
             var xAxisG = svg.append("g")
                 .style("transform", `translateY(${svgRef.current.clientHeight-25}px)`)
@@ -224,7 +202,6 @@ const BiasPanel = (props) => {
 
             const yScale = scaleLinear()
                 .domain([yScaleMin - (yScaleMax-yScaleMin)/10,yScaleMax + (yScaleMax-yScaleMin)/10])
-                // .domain([0,1])
                 .range([svgRef.current.clientHeight-25, 20]);
 
             const yAxis = axisLeft(yScale);
@@ -247,7 +224,6 @@ const BiasPanel = (props) => {
 
             let positive_center = xScale('positive') + 211.25;
             var box_width = 100
-            // console.log("box plot loaded")
             svg
                 .append("line")
                 .attr("x1", positive_center)
@@ -276,7 +252,6 @@ const BiasPanel = (props) => {
                 .attr("y2", function(d){ return(yScale(d))} )
                 .attr("stroke", "black")
 
-            // let colourScale = scaleSequential().domain([yScaleMin - (yScaleMax-yScaleMin)/10,yScaleMax + (yScaleMax-yScaleMin)/10]).interpolator(interpolateBuPu);
 
             let data_unsorted2 = boxPlotData['negative'].map(d =>  ({ value : d.value, instance_name: d.instance_name, task_id : d.task_id}))
             let data_sorted2 = boxPlotData['negative'].map(d =>  d.value).sort(d3.ascending)

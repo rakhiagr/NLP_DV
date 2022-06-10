@@ -6,9 +6,7 @@ import { NonceProvider } from 'react-select';
 
 const BeeSwarm = (props) => {
     const svgRef = useRef();
-    // const panelRefresh = useRef(false);
     const [data, setData] = useState(null);
-    // const [panelRefresh, setPanelRefresh] = useState(false);
 
     useEffect(() => {
         if(props.task !== ''){
@@ -27,7 +25,6 @@ const BeeSwarm = (props) => {
         if(data != null){
             if(props.panelRefresh){
                 const newArr = data.map((obj) => {
-                    // console.log("obj: ", obj)
                     let acc = obj.accuracy;
                     let id = +(obj.id.charAt(obj.id.length - 1));
                     var random_val = Math.random() * (0.3 + 0.3) - 0.3;
@@ -42,29 +39,21 @@ const BeeSwarm = (props) => {
             const svg = d3.select(svgRef.current);
             svg.selectAll('*').remove();
             svg.attr("class", "beeswarm-svg");
-                let sectors = Array.from(new Set(data.map((d) => d.id)));
-                let xCoords = sectors.map((d, i) => 75 + i * 110);
-                let xScale = d3.scaleOrdinal().domain(sectors).range(xCoords);
-                let width = svg.style("width");
-                let height = svgRef.current.clientHeight;
-                
-
-            let yScale = d3
-                .scaleLinear()
-                    .domain([0,1])
-                    .range([svgRef.current.clientHeight-45 , 50]);
-                let Domain = d3.extent(data.map((d) => d["accuracy"]));
-                Domain = Domain.map((d) => d);
-                let size = d3.scaleLinear().domain(Domain).range([2, 8]);
-    const yAxis = d3.axisLeft().scale(yScale).ticks(5).tickSize(svgRef.current.clientWidth - 100);
-    const xAxis = d3.axisBottom()
-            .scale(xScale)
-            .tickPadding(5);
+            let sectors = Array.from(new Set(data.map((d) => d.id)));
+            let xCoords = sectors.map((d, i) => 75 + i * 110);
+            let xScale = d3.scaleOrdinal().domain(sectors).range(xCoords);
+            let width = svg.style("width");
+            let height = svgRef.current.clientHeight;
+            let yScale = d3.scaleLinear().domain([0,1]).range([svgRef.current.clientHeight-45 , 50]);
+            let Domain = d3.extent(data.map((d) => d["accuracy"]));
+            Domain = Domain.map((d) => d);
+            let size = d3.scaleLinear().domain(Domain).range([2, 8]);
+            const yAxis = d3.axisLeft().scale(yScale).ticks(5).tickSize(svgRef.current.clientWidth - 100);
+            const xAxis = d3.axisBottom().scale(xScale).tickPadding(5);
             let selectedTaskId = data.filter(d => d['_id'] === props.task);
-            // console.log('Selected task id: '. selectedTaskId);
-        const xAxisG = svg.append('g')
-            .style("font-size", `1rem`)
-            .attr('transform', `translate(20, ${svgRef.current.clientHeight-65})`);
+            const xAxisG = svg.append('g')
+                .style("font-size", `1rem`)
+                .attr('transform', `translate(20, ${svgRef.current.clientHeight-65})`);
 
             svg
                 .append("g")
@@ -75,8 +64,7 @@ const BeeSwarm = (props) => {
                 .append("circle")
                 .attr("class", "circ")
                 .style("fill", function(d) { 
-                    // var x = d.id;
-                    // console.log("x: ", x)
+
                     return colors[d.id.slice(5)-1]; 
                 })
                 .attr("r", (d) => size(d["accuracy"]))
@@ -129,7 +117,6 @@ const BeeSwarm = (props) => {
                 .attr('x', -height/2)
                 .attr('y', -40)
                 .attr('font-size', '16')
-                // .attr('transform', 'rotate(' + -90 + ')')
                 .attr('transform', `translate(${-svgRef.current.clientWidth+110}, 0) rotate(-90)`)
                 .attr('text-anchor', 'middle')
                 .text("Accuracy of tasks")
