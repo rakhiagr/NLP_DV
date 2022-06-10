@@ -96,7 +96,7 @@ const BiasPanel = (props) => {
             }
             const xScale = scaleBand().domain(data.map(d =>  d.key)).range([40,svgRef.current.clientWidth-50]).padding(0.25);
             const xAxis = axisBottom(xScale).ticks(data.length);
-            svg.append("g")
+            var xAxisG = svg.append("g")
                 .style("transform", `translateY(${svgRef.current.clientHeight-20}px)`)
                 .style("font-size", `1rem`)
                 .call(xAxis);
@@ -104,10 +104,33 @@ const BiasPanel = (props) => {
                 .domain([0, y_max+10])
                 .range([svgRef.current.clientHeight-20, 20]);
             const yAxis = axisLeft(yScale).ticks(data.length);
-            svg.append("g")
+            var yAxisG = svg.append("g")
                 .style("transform", `translateX(${40}px)`)
                 .style("font-size", `1rem`)
                 .call(yAxis);
+
+            xAxisG.selectAll(".tick").attr("color", "gray");
+            xAxisG.selectAll(".domain").attr("color", "gray");
+            yAxisG.selectAll(".tick").attr("color", "gray");
+            yAxisG.selectAll(".domain").attr("color", "gray");
+            
+            // xAxis.call(g => g.selectAll(".tick text")
+            //     .attr("color", "gray"))
+            // .call(g => g.selectAll(".tick")
+            //     .attr("color", "gray"))
+            // .call(g => g.selectAll(".domain")
+            //     .attr("color", "gray")
+            //     .attr("stroke", "gray"));
+
+            //     yAxis.call(g => g.selectAll(".tick text")
+            //     .attr("color", "gray"))
+            // .call(g => g.selectAll(".tick")
+            //     .attr("color", "gray"))
+            // .call(g => g.selectAll(".domain")
+            //     .attr("color", "gray")
+            //     .attr("stroke", "gray"));
+
+            
             var colors = props.colors;
             svg.selectAll(".bar")
                 .data(data)
@@ -185,12 +208,16 @@ const BiasPanel = (props) => {
             const xAxis = axisBottom(xScale).ticks(2);
             //xScale('positive') + 211.25
             
-            svg.append("g")
+            var xAxisG = svg.append("g")
                 .style("transform", `translateY(${svgRef.current.clientHeight-25}px)`)
                 .style("font-size", `1rem`)
                 .call(xAxis)
-                .selectAll(".tick").attr("id", function(d,i) {return "label_"+i});
+                .selectAll(".tick").attr("id", function(d,i) {return "label_"+i}).attr("color", "gray");
+            
+            svg.selectAll(".domain").attr("stroke", "gray");
+            
             d3.select("#label_0").style("transform", "translateX(266.25px)");
+
             d3.select("#label_1").style("transform", "translateX(848.75px)");
             const yScaleMin = Math.min(min_y_value, min_y_value2);
             const yScaleMax = Math.max(max_y_value,max_y_value2);
@@ -201,10 +228,14 @@ const BiasPanel = (props) => {
                 .range([svgRef.current.clientHeight-25, 20]);
 
             const yAxis = axisLeft(yScale);
-            svg.append("g")
+            var yAxisG = svg.append("g")
                 .style("transform", `translateX(${55}px)`)
                 .style("font-size", `1rem`)
                 .call(yAxis);
+
+
+            yAxisG.selectAll(".tick").attr("color", "gray");
+            yAxisG.selectAll(".domain").attr("color", "gray");
 
             let data_unsorted = boxPlotData['positive'].map(d =>  ({ value : d.value, instance_name: d.instance_name, task_id : d.task_id }))
             let data_sorted = boxPlotData['positive'].map(d =>  d.value).sort(d3.ascending)
@@ -360,6 +391,9 @@ const BiasPanel = (props) => {
                 .style("transform", `translateX(${75}px)`)
                 .style("font-size", `1rem`)
                 .call(yAxis);
+            
+            svg.selectAll(".domain").attr("stroke", "gray");
+            svg.selectAll(".tick").attr("color", "gray");
 
             var myColor = d3.scaleSequential()
                 .interpolator(d3.interpolatePuRd)
